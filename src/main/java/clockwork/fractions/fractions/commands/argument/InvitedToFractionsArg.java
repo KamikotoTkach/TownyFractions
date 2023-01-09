@@ -1,7 +1,7 @@
-package clockwork.fractions.commands.arguments;
+package clockwork.fractions.fractions.commands.argument;
 
-import clockwork.fractions.storage.FractionPlayer;
-import clockwork.fractions.FractionsAPI;
+import clockwork.fractions.fractions.FractionsAPI;
+import clockwork.fractions.fractions.storage.FractionPlayer;
 import org.bukkit.command.CommandSender;
 import tkachgeek.commands.command.Argument;
 

@@ -1,4 +1,6 @@
-package clockwork.fractions.storage;
+package clockwork.fractions.fractions.storage;
+
+import java.util.Objects;
 
 public class Rank {
   private String name;
@@ -16,6 +18,28 @@ public class Rank {
   public Rank salary(int salary) {
     this.salary = salary;
     return this;
+  }
+  
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    
+    Rank rank = (Rank) o;
+    
+    if (salary != rank.salary) return false;
+    if (priority != rank.priority) return false;
+    if (!Objects.equals(name, rank.name)) return false;
+    return Objects.equals(permissions, rank.permissions);
+  }
+  
+  @Override
+  public int hashCode() {
+    int result = name != null ? name.hashCode() : 0;
+    result = 31 * result + salary;
+    result = 31 * result + priority;
+    result = 31 * result + (permissions != null ? permissions.hashCode() : 0);
+    return result;
   }
   
   public Permissions permissions() {

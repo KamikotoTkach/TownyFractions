@@ -1,9 +1,11 @@
 package clockwork.fractions.utils;
 
-import clockwork.fractions.storage.FractionPlayer;
-import clockwork.fractions.storage.config.Messages;
+import clockwork.fractions.config.Messages;
+import clockwork.fractions.fractions.storage.FractionPlayer;
 import tkachgeek.config.minilocale.Placeholder;
 import tkachgeek.tkachutils.messages.MessageReturn;
+
+import java.util.Optional;
 
 public class Validate {
   public static void rankGreater(FractionPlayer fraction_general, FractionPlayer fraction_player) throws MessageReturn {
@@ -30,9 +32,15 @@ public class Validate {
     }
   }
   
-  public static void canChangeMembers(FractionPlayer fraction_general) throws MessageReturn{
+  public static void canChangeMembers(FractionPlayer fraction_general) throws MessageReturn {
     if (!fraction_general.canChangeMembers()) {
       Messages.getInstance().you_hasnt_changemembers_permission.throwback();
+    }
+  }
+  
+  public static void isPresent(Optional<?> object, String name) throws MessageReturn {
+    if (object.isEmpty()) {
+      Messages.getInstance().$name_not_exist.throwback(Placeholder.add("name", name));
     }
   }
 }

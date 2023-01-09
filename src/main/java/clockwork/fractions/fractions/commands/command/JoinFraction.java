@@ -1,6 +1,6 @@
-package clockwork.fractions.commands.command;
+package clockwork.fractions.fractions.commands.command;
 
-import clockwork.fractions.storage.FractionPlayer;
+import clockwork.fractions.fractions.storage.FractionPlayer;
 import tkachgeek.commands.command.arguments.executor.Executor;
 import tkachgeek.tkachutils.messages.MessageReturn;
 

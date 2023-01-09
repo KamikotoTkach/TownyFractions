@@ -1,11 +1,11 @@
-package clockwork.fractions.storage.config;
+package clockwork.fractions.config;
 
 import clockwork.fractions.Fractions;
-import clockwork.fractions.storage.Rank;
-import clockwork.fractions.storage.fractions.ArmyFraction;
-import clockwork.fractions.storage.fractions.BanditFraction;
-import clockwork.fractions.storage.fractions.FractionInstance;
-import clockwork.fractions.storage.fractions.PoliceFraction;
+import clockwork.fractions.fractions.ArmyFraction;
+import clockwork.fractions.fractions.BanditFraction;
+import clockwork.fractions.fractions.FractionInstance;
+import clockwork.fractions.fractions.PoliceFraction;
+import clockwork.fractions.fractions.storage.Rank;
 import tkachgeek.config.yaml.YmlConfig;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import java.util.Optional;
 public class FractionsStorage extends YmlConfig {
   static FractionsStorage instance;
   
-  transient private final List<Rank> defaultPoliceRanks = new ArrayList<Rank>() {{
+  transient private final List<Rank> defaultPoliceRanks = new ArrayList<>() {{
     add(new Rank("Рядовой").salary(10));
     add(new Rank("Сержант").salary(15));
     add(new Rank("Старшина").salary(20));
@@ -30,7 +30,7 @@ public class FractionsStorage extends YmlConfig {
     add(new Rank("Министр юстици").salary(65));
   }};
   
-  transient private final List<Rank> defaultArmyRanks = new ArrayList<Rank>() {{
+  transient private final List<Rank> defaultArmyRanks = new ArrayList<>() {{
     add(new Rank("Рядовой").salary(20));
     add(new Rank("Ефрейтор").salary(22));
     add(new Rank("Сержант").salary(24));
@@ -44,7 +44,7 @@ public class FractionsStorage extends YmlConfig {
     add(new Rank("Министр обороны").salary(40));
   }};
   
-  transient private final List<Rank> defaultBanditRanks = new ArrayList<Rank>() {{
+  transient private final List<Rank> defaultBanditRanks = new ArrayList<>() {{
     add(new Rank("Козёл"));
     add(new Rank("Мужик"));
     add(new Rank("Блатной"));
@@ -52,7 +52,7 @@ public class FractionsStorage extends YmlConfig {
     add(new Rank("Глава"));
   }};
   
-  List<FractionInstance> fractions = new ArrayList<FractionInstance>() {{
+  List<FractionInstance> fractions = new ArrayList<>() {{
     add(new PoliceFraction().setRanks(defaultPoliceRanks));
     add(new ArmyFraction().setRanks(defaultArmyRanks));
     add(new BanditFraction().setRanks(defaultBanditRanks));

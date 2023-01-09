@@ -1,4 +1,4 @@
-package clockwork.fractions.storage.fractions;
+package clockwork.fractions.fractions;
 
 public class PoliceFraction extends FractionInstance {
   public PoliceFraction() {

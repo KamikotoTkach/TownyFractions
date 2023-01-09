@@ -1,4 +1,4 @@
-package clockwork.fractions.storage;
+package clockwork.fractions.fractions.storage;
 
 public class Permissions {
   private boolean canChangeMembers = false; //изменение состава
@@ -6,6 +6,26 @@ public class Permissions {
   private boolean canRaid = false; //штурм
   
   public Permissions() {
+  }
+  
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    
+    Permissions that = (Permissions) o;
+    
+    if (canChangeMembers != that.canChangeMembers) return false;
+    if (canChangeRank != that.canChangeRank) return false;
+    return canRaid == that.canRaid;
+  }
+  
+  @Override
+  public int hashCode() {
+    int result = (canChangeMembers ? 1 : 0);
+    result = 31 * result + (canChangeRank ? 1 : 0);
+    result = 31 * result + (canRaid ? 1 : 0);
+    return result;
   }
   
   public boolean canChangeMembers() {

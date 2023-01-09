@@ -1,9 +1,9 @@
-package clockwork.fractions.storage;
+package clockwork.fractions.fractions.storage;
 
-import clockwork.fractions.storage.config.FractionsStorage;
-import clockwork.fractions.storage.config.Messages;
-import clockwork.fractions.storage.config.PlayerStorage;
-import clockwork.fractions.storage.fractions.FractionInstance;
+import clockwork.fractions.config.FractionsStorage;
+import clockwork.fractions.config.Messages;
+import clockwork.fractions.config.PlayerStorage;
+import clockwork.fractions.fractions.FractionInstance;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -12,16 +12,13 @@ import org.jetbrains.annotations.Nullable;
 import tkachgeek.config.minilocale.Placeholder;
 import tkachgeek.tkachutils.messages.MessageReturn;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public class FractionPlayer {
   transient UUID uuid = null;
   private FractionInstance fraction = null;
   private Rank rank = null;
-  private List<String> invitedTo = new ArrayList<>();
+  private final List<String> invitedTo = new ArrayList<>();
   
   public FractionPlayer() {
   }
@@ -132,7 +129,7 @@ public class FractionPlayer {
     if (isInvited(fraction_name)) {
       Messages.getInstance().player_has_fraction_invite.throwback();
     }
-    
+  
     invitedTo.add(fraction_name);
     Messages.getInstance().you_invited_$fraction.send(getUUID(), Placeholder.add("fraction", fraction.name));
   }

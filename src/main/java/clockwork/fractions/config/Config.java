@@ -1,4 +1,4 @@
-package clockwork.fractions.storage.config;
+package clockwork.fractions.config;
 
 import clockwork.fractions.Fractions;
 import tkachgeek.config.yaml.YmlConfig;

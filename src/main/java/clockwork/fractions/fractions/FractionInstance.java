@@ -1,14 +1,16 @@
-package clockwork.fractions.storage.fractions;
+package clockwork.fractions.fractions;
 
-import clockwork.fractions.storage.FractionPlayer;
-import clockwork.fractions.storage.Rank;
-import clockwork.fractions.storage.config.Messages;
+import clockwork.fractions.config.Messages;
+import clockwork.fractions.fractions.storage.FractionPlayer;
+import clockwork.fractions.fractions.storage.Rank;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import tkachgeek.tkachutils.messages.MessageReturn;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 @JsonTypeInfo(
    use = JsonTypeInfo.Id.NAME,
    include = JsonTypeInfo.As.PROPERTY,
@@ -48,5 +50,35 @@ public class FractionInstance {
     if (!canLeave(player)) {
       Messages.getInstance().you_cannot_leave.throwback();
     }
+  }
+  
+  public boolean isFractionRank(String rank_name) {
+    for (Rank rank : this.getRanks()) {
+      if (rank.name().equalsIgnoreCase(rank_name)) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  public Optional<Rank> getRank(String rank_name) {
+    for (Rank rank : this.getRanks()) {
+      if (rank.name().equalsIgnoreCase(rank_name)) {
+        return Optional.of(rank);
+      }
+    }
+    return Optional.empty();
+  }
+  
+  public boolean isBanditFraction() {
+    return this instanceof BanditFraction;
+  }
+  
+  public boolean isPoliceFraction() {
+    return this instanceof PoliceFraction;
+  }
+  
+  public boolean isArmyFraction() {
+    return this instanceof ArmyFraction;
   }
 }

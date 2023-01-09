@@ -1,8 +1,8 @@
-package clockwork.fractions.storage.config;
+package clockwork.fractions.config;
 
-import clockwork.fractions.storage.FractionPlayer;
 import clockwork.fractions.Fractions;
-import clockwork.fractions.storage.fractions.FractionInstance;
+import clockwork.fractions.fractions.FractionInstance;
+import clockwork.fractions.fractions.storage.FractionPlayer;
 import com.google.common.collect.HashBiMap;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -10,7 +10,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import tkachgeek.config.yaml.YmlConfig;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 public class PlayerStorage extends YmlConfig {
   static PlayerStorage instance;
@@ -37,18 +40,18 @@ public class PlayerStorage extends YmlConfig {
   }
   
   public static FractionPlayer get(UUID uuid) {
-    if (!getInstance().players.containsKey(uuid)) {
-      getInstance().players.put(Bukkit.getOfflinePlayer(uuid), new FractionPlayer());
-    }
-    return getInstance().players.get(uuid);
+    return get(Bukkit.getOfflinePlayer(uuid));
   }
   
   public static FractionPlayer get(OfflinePlayer player) {
-    return get(player.getUniqueId());
+    if (!getInstance().players.containsKey(player)) {
+      getInstance().players.put(player, new FractionPlayer());
+    }
+    return getInstance().players.get(player);
   }
   
   public static FractionPlayer get(Player player) {
-    return get(player.getUniqueId());
+    return get(Bukkit.getOfflinePlayer(player.getUniqueId()));
   }
   
   public static UUID getUUID(FractionPlayer fractionPlayer) {

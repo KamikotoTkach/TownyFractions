@@ -1,4 +1,4 @@
-package clockwork.fractions.storage.config;
+package clockwork.fractions.config;
 
 import clockwork.fractions.Fractions;
 import tkachgeek.config.minilocale.Message;
@@ -26,12 +26,18 @@ public class Messages extends YmlConfig {
   public Message rank_successfully_set = new Message("<gold>Ранг успешно изменён");
   public Message your_rank_was_updated_to_$rank = new Message("<gold>Теперь вы <yellow><rank>");
   public Message you_hasnt_changemembers_permission = new Message("<gold>У вас нет прав менять состав участников фракции");
+  public Message $name_not_exist = new Message("<yellow><name> <gold>не найден");
+  public Message command_already_blocked = new Message("<gold>Такая команда уже заблокирована");
+  public Message command_blocked_successfully = new Message("<gold>Команда успешно заблокирована");
   
-  public Messages(){}
+  public Messages() {
+  }
+  
   public static Messages getInstance() {
-    if(instance == null) load();
+    if (instance == null) load();
     return instance;
   }
+  
   public static void load() {
     instance = Fractions.yml.load("Messages", Messages.class);
   }
