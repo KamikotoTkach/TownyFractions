@@ -47,7 +47,6 @@ public class FractionPlayer {
     return PlayerStorage.get(name);
   }
   
- 
   
   public Rank getRank() {
     return rank;
@@ -62,10 +61,6 @@ public class FractionPlayer {
     return fraction != null;
   }
   
-  public String getFractionName() {
-    return this.fraction.name;
-  }
-  
   public boolean canChangeRank() {
     return rank != null && rank.permissions().canChangeRank();
   }
@@ -74,26 +69,8 @@ public class FractionPlayer {
     return rank.permissions().canChangeMembers();
   }
   
-  public boolean isFractionRank(String rank_name) {
-    for (Rank rank : this.fraction.ranks) {
-      if (rank.name().equalsIgnoreCase(rank_name)) {
-        return true;
-      }
-    }
-    return false;
-  }
-  
-  public Optional<Rank> getFractionRank(String rank_name) {
-    for (Rank rank : this.fraction.ranks) {
-      if (rank.name().equalsIgnoreCase(rank_name)) {
-        return Optional.of(rank);
-      }
-    }
-    return Optional.empty();
-  }
-  
   public int getPriority() {
-    return fraction.ranks.indexOf(rank);
+    return fraction.getRanks().indexOf(rank);
   }
   
   public @Nullable FractionInstance getFraction() {
@@ -101,7 +78,30 @@ public class FractionPlayer {
   }
   
   public boolean isGreater(FractionPlayer toCheck) {
-    return fraction.ranks.indexOf(toCheck.rank) > fraction.ranks.indexOf(rank);
+    return fraction.getRanks().indexOf(rank) > fraction.getRanks().indexOf(toCheck.rank);
+  }
+  
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    
+    FractionPlayer that = (FractionPlayer) o;
+    
+    return Objects.equals(uuid, that.uuid);
+  }
+  
+  @Override
+  public int hashCode() {
+    return uuid != null ? uuid.hashCode() : 0;
+  }
+  
+  public boolean isGreaterOrEquals(FractionPlayer toCheck) {
+    return this.isGreaterOrEquals(toCheck.getRank());
+  }
+  
+  public boolean isGreaterOrEquals(Rank toCheck) {
+    return fraction.getRanks().indexOf(rank) >= fraction.getRanks().indexOf(toCheck);
   }
   
   public List<String> getInvitedTo() {
@@ -131,7 +131,7 @@ public class FractionPlayer {
     }
   
     invitedTo.add(fraction_name);
-    Messages.getInstance().you_invited_$fraction.send(getUUID(), Placeholder.add("fraction", fraction.name));
+    Messages.getInstance().you_invited_$fraction.send(getUUID(), Placeholder.add("fraction", fraction.getName()));
   }
   
   public void removeInvite(String fraction_name) throws MessageReturn {
@@ -160,12 +160,12 @@ public class FractionPlayer {
     fraction.onLeave(this);
     fraction = null;
     rank = null;
-    Messages.getInstance().you_leaved_$fraction.send(getUUID(), Placeholder.add("fraction", fraction.name));
+    Messages.getInstance().you_leaved_$fraction.send(getUUID(), Placeholder.add("fraction", fraction.getName()));
   }
   
   public void kickedFraction() {
     fraction = null;
     rank = null;
-    Messages.getInstance().you_kicked_$fraction.send(getUUID(), Placeholder.add("fraction", fraction.name));
+    Messages.getInstance().you_kicked_$fraction.send(getUUID(), Placeholder.add("fraction", fraction.getName()));
   }
 }

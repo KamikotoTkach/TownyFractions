@@ -69,37 +69,29 @@ public final class Fractions extends JavaPlugin {
              new RanksAtFractions()
           ).canExecute(CAN_INVITE)
        ).register(this);
-    
+  
+    new Command("blockCMD",
+                new BlockCommandExecutor(),
+                new FractionsArg(),
+                new RanksAtFractions(),
+                new SpacedStringArg("команда"))
+       .register(this);
+  
+    Bukkit.getPluginManager().registerEvents(new CommandListener(), this);
+    Bukkit.getPluginManager().registerEvents(new BoardListener(), this);
   }
   
   private void sendLogo() {
     char[] symbols = "1234569abcde".toCharArray();
     char symbol = symbols[new Random().nextInt(symbols.length)];
   
-    new Message("")
-       .send(Bukkit.getConsoleSender());
-    new Message("§<symbol>  ___ _         _  __      __       _   ")
-       .builder()
-       .replacePlaceholders("<symbol>", symbol)
-       .getMessage()
-       .send(Bukkit.getConsoleSender());
-    new Message("§<symbol> / __| |___  __| |_\\ \\    / /__ _ _| |__")
-       .builder()
-       .replacePlaceholders("<symbol>", symbol)
-       .getMessage()
-       .send(Bukkit.getConsoleSender());
-    new Message("§<symbol>| (__| / _ \\/ _| / /\\ \\/\\/ / _ \\ '_| / /")
-       .builder()
-       .replacePlaceholders("<symbol>", symbol)
-       .getMessage()
-       .send(Bukkit.getConsoleSender());
-    new Message("§<symbol> \\___|_\\___/\\__|_\\_\\ \\_/\\_/\\___/_| |_\\_\\")
-       .builder()
-       .replacePlaceholders("<symbol>", symbol)
-       .getMessage()
-       .send(Bukkit.getConsoleSender());
-    new Message("")
-       .send(Bukkit.getConsoleSender());
+    Bukkit.getConsoleSender().sendMessage("");
+    Bukkit.getConsoleSender().sendMessage("§z  ___ _         _  __      __       _   ".replace('z', symbol));
+    Bukkit.getConsoleSender().sendMessage("§z / __| |___  __| |_\\ \\    / /__ _ _| |__".replace('z', symbol));
+    Bukkit.getConsoleSender().sendMessage("§z| (__| / _ \\/ _| / /\\ \\/\\/ / _ \\ '_| / /".replace('z', symbol));
+    Bukkit.getConsoleSender().sendMessage("§z \\___|_\\___/\\__|_\\_\\ \\_/\\_/\\___/_| |_\\_\\".replace('z', symbol));
+    Bukkit.getConsoleSender().sendMessage("§z                            cwcode.ru/vk".replace('z', symbol));
+    Bukkit.getConsoleSender().sendMessage("");
   }
   
   @Override

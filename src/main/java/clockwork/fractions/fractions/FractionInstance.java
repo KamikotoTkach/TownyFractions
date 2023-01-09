@@ -22,11 +22,13 @@ import java.util.Optional;
 })
 
 public class FractionInstance {
-  public String name;
-  public List<Rank> ranks = new ArrayList<>();
+  private String name;
+  private String prefix;
+  private List<Rank> ranks = new ArrayList<>();
   
-  public FractionInstance(String name) {
+  public FractionInstance(String name, String prefix) {
     this.name = name;
+    this.prefix = prefix;
   }
   
   public FractionInstance() {
@@ -37,9 +39,16 @@ public class FractionInstance {
     return this;
   }
   
-  
   public String getName() {
-    return name;
+    return this.name;
+  }
+  
+  public String getPrefix() {
+    return this.prefix;
+  }
+  
+  public List<Rank> getRanks() {
+    return this.ranks;
   }
   
   public boolean canLeave(FractionPlayer player) {

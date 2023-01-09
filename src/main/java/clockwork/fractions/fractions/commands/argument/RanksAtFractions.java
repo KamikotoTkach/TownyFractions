@@ -19,7 +19,7 @@ public class RanksAtFractions extends Argument {
   public List<String> completions(CommandSender commandSender) {
     var fraction = FractionPlayer.get(commandSender);
     if(fraction.isEmpty()) return Collections.emptyList();
-    return fraction.get().getFraction().ranks.stream().map(x->x.name()).toList();
+    return fraction.get().getFraction().getRanks().stream().map(Rank::name).toList();
   }
   
   @Override

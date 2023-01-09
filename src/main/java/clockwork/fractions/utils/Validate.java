@@ -15,7 +15,7 @@ public class Validate {
   }
   
   public static void equalFractions(FractionPlayer fraction_general, FractionPlayer fraction_player) throws MessageReturn {
-    if (!fraction_general.getFractionName().equalsIgnoreCase(fraction_player.getFractionName())) {
+    if (!fraction_general.getFraction().getName().equalsIgnoreCase(fraction_player.getFraction().getName())) {
       Messages.getInstance().you_are_not_in_the_same_fraction.throwback();
     }
   }
