@@ -1,6 +1,6 @@
 name: TownyFractions
 version: '${project.version}'
-main: tkachgeek.fractions.Fractions
+main: ru.cwcode.fractions.Fractions
 api-version: 1.16
 depend: [ Towny, QualityArmory, Banks, Vehicles, TownyTerritory, Vault, Commands, Config ]
 commands:
