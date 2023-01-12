@@ -28,6 +28,10 @@ public class PlayerStorage extends YmlConfig {
     instance = Fractions.yml.load("PlayerStorage", PlayerStorage.class);
   }
   
+  public static UUID getUUID(FractionPlayer fractionPlayer) {
+    return getInstance().players.inverse().get(fractionPlayer).getUniqueId();
+  }
+  
   public static Optional<FractionPlayer> get(CommandSender sender) {
     if (sender instanceof OfflinePlayer player) {
       return Optional.of(get(player.getUniqueId()));
@@ -40,8 +44,14 @@ public class PlayerStorage extends YmlConfig {
     return get(Bukkit.getOfflinePlayer(uuid));
   }
   
-  public static FractionPlayer get(OfflinePlayer player) {
-    Optional<Map.Entry<OfflinePlayer, FractionPlayer>> oldPlayer = getInstance().players.entrySet().stream().filter(x -> x.getKey().getUniqueId().equals(player.getUniqueId())).findFirst();
+  public static FractionPlayer get(OfflinePlayer player) {//todo: поправить код, рабочий, но из стримов был сделан
+    Optional<Map.Entry<OfflinePlayer, FractionPlayer>> oldPlayer = Optional.empty();
+    for (Map.Entry<OfflinePlayer, FractionPlayer> x : getInstance().players.entrySet()) {
+      if (x.getKey().getUniqueId().equals(player.getUniqueId())) {
+        oldPlayer = Optional.of(x);
+        break;
+      }
+    }
     if (oldPlayer.isPresent()) {
       FractionPlayer fp = oldPlayer.get().getValue();
       getInstance().players.remove(oldPlayer.get().getKey());
@@ -56,23 +66,19 @@ public class PlayerStorage extends YmlConfig {
     return get(Bukkit.getOfflinePlayer(player.getUniqueId()));
   }
   
-  public static UUID getUUID(FractionPlayer fractionPlayer) {
-    return instance.players.inverse().get(fractionPlayer).getUniqueId();
-  }
-  
   public static Optional<FractionPlayer> get(String name) {
-    for (var playerAndFraction : instance.players.entrySet()) {
+    for (var playerAndFraction : getInstance().players.entrySet()) {
       if (playerAndFraction.getValue().getName().equals(name)) {
         return Optional.of(playerAndFraction.getValue());
       }
     }
-  
+    if (Bukkit.getPlayer(name) != null) return Optional.of(get(Bukkit.getPlayer(name)));
     return Optional.empty();
   }
   
   public static List<OfflinePlayer> getAllPlayersWithFraction(FractionInstance fraction) {
     List<OfflinePlayer> ret = new ArrayList<>();
-    for (var playerAndFraction : instance.players.entrySet()) {
+    for (var playerAndFraction : getInstance().players.entrySet()) {
       if (playerAndFraction.getValue().hasFraction() && playerAndFraction.getValue().getFraction().equals(fraction)) {
         ret.add(playerAndFraction.getKey());
       }
@@ -82,7 +88,7 @@ public class PlayerStorage extends YmlConfig {
   
   public static List<FractionPlayer> getAllFractionPlayersWithFraction(FractionInstance fraction) {
     List<FractionPlayer> ret = new ArrayList<>();
-    for (var playerAndFraction : instance.players.entrySet()) {
+    for (var playerAndFraction : getInstance().players.entrySet()) {
       if (playerAndFraction.getValue().hasFraction() && playerAndFraction.getValue().getFraction().equals(fraction)) {
         ret.add(playerAndFraction.getValue());
       }
@@ -92,8 +98,25 @@ public class PlayerStorage extends YmlConfig {
   
   public static List<FractionPlayer> getOnlineFractionPlayersWithFraction(FractionInstance fraction) {
     List<FractionPlayer> ret = new ArrayList<>();
-    for (var playerAndFraction : instance.players.entrySet()) {
-      if (playerAndFraction.getKey().isOnline() && playerAndFraction.getValue().hasFraction() && playerAndFraction.getValue().getFraction().equals(fraction)) {
+    
+    for (var playerAndFraction : getInstance().players.entrySet()) {
+      if (playerAndFraction.getKey().isOnline()
+         && playerAndFraction.getValue().hasFraction()
+         && playerAndFraction.getValue().getFraction().equals(fraction)) {
+        ret.add(playerAndFraction.getValue());
+      }
+    }
+    return ret;
+  }
+  
+  public static List<FractionPlayer> getOnlineFractionPlayersWithFractions(FractionInstance... fractions) {
+    List<FractionPlayer> ret = new ArrayList<>();
+    List<FractionInstance> fractionInstances = List.of(fractions);
+    
+    for (var playerAndFraction : getInstance().players.entrySet()) {
+      if (playerAndFraction.getKey().isOnline()
+         && playerAndFraction.getValue().hasFraction()
+         && fractionInstances.contains(playerAndFraction.getValue().getFraction())) {
         ret.add(playerAndFraction.getValue());
       }
     }

@@ -29,11 +29,12 @@ public class Messages extends YmlConfig {
   public Message $name_not_exist = new Message("<yellow><name> <gold>не найден");
   public Message command_already_blocked = new Message("<gold>Такая команда уже заблокирована");
   public Message command_blocked_successfully = new Message("<gold>Команда успешно заблокирована");
-  public Message you_need_to_lead_fraction_before_use_this = new Message("Необходимо возглавить фракцию, чтобы использовать эту команду");
+  public Message you_need_to_lead_fraction_before_use_this = new Message("<gold>Необходимо возглавить фракцию, чтобы использовать эту команду");
   public Message you_hasnt_fraction = new Message("У вас нет фракции");
   public Message fractionInfoHeader$name$totalPlayers$online = new Message("<gray>Фракция <gold><name>");
   public Message fractionInfoRank$name$salary = new Message("<gray>- <gold><name> <gray>[<gold><salary>$<gray>]");
   public Message fractionInfoRanksHeader = new Message("Ранги:");
+  public Message you_joined_fraction_$name = new Message("<gold>Вы вступили во фракцию <yellow><name>");
   
   public Messages() {
   }

@@ -44,57 +44,50 @@ public final class Fractions extends JavaPlugin {
     plugin = this;
     Logo.sendLogo();
     
-    new Command("fraction", new FractionInfo())
+    new Command("fraction", "fraction", new FractionInfo())
        .subCommands(
           new Command("admin")
              .arguments(
                 new ArgumentSet(new AdminSetFraction(), new ExactStringArg("editPlayer"),
                                 new PlayerArg(),
                                 new FractionsArg(),
-                                new RanksAtFraction(-1)),
-                
+                                new RanksAtFraction(-1).optional())
+                   .help("Позволяет изменить игроку фракцию или ранг"),
+      
                 new ArgumentSet(new BlockCommandExecutor(), new ExactStringArg("blockCmd"),
                                 new FractionsArg(),
                                 new RanksAtFraction(-1),
-                                new SpacedStringArg("команда")))
+                                new SpacedStringArg("команда"))
+                   .help("Позволяет заблокировать команду для всех игроков, кроме тех, кто имеет указанную фракцию и указанный ранг (или ранг выше)")
+             )
+
        ).arguments(
-          new ArgumentSet(
-             new JoinFraction(),
-             new ExactStringArg("join"),
-             new InvitedToFractionsArg()
-          ).canExecute(HASNT_FRACTION),
-          
-          new ArgumentSet(
-             new RenameRank(),
-             new ExactStringArg("renameRank"),
-             new RanksAtSenderFraction(),
-             new StringArg("новое название ранга")
-          ).canExecute(HAS_BANDIT_FRACTION),
-          
-          new ArgumentSet(
-             new LeaveFraction(),
-             new ExactStringArg("leave")
-          ).canExecute(HAS_FRACTION)
-           .confirmWith("подтверждаю", 60),
-          
-          new ArgumentSet(
-             new KickFromFraction(),
-             new ExactStringArg("kick"),
-             new PlayersAtSenderFraction()
-          ).canExecute(CAN_KICK),
-          
-          new ArgumentSet(
-             new InviteFraction(),
-             new ExactStringArg("invite"),
-             new PlayerArg()
-          ).canExecute(CAN_INVITE),
-          
-          new ArgumentSet(
-             new SetFractionRank(),
-             new ExactStringArg("setRank"),
-             new PlayersAtSenderFraction(),
-             new RanksAtSenderFraction()
-          ).canExecute(CAN_INVITE)
+   
+          new ArgumentSet(new JoinFraction(), new ExactStringArg("join"), new InvitedToFractionsArg())
+             .canExecute(HASNT_FRACTION)
+             .help("Позволяет вступить во фракцию, в которую вас пригласили"),
+   
+          new ArgumentSet(new RenameRank(), new ExactStringArg("renameRank"), new RanksAtSenderFraction(), new StringArg("новое название ранга"))
+             .canExecute(HAS_BANDIT_FRACTION)
+             .help("Позволяет переименовать ранг (только для бандитов)"),
+   
+          new ArgumentSet(new LeaveFraction(), new ExactStringArg("leave"))
+             .canExecute(HAS_FRACTION)
+             .confirmWith("подтверждаю", 60)
+             .help("Позволяет покинуть фракцию"),
+   
+          new ArgumentSet(new KickFromFraction(), new ExactStringArg("kick"), new PlayersAtSenderFraction())
+             .canExecute(CAN_KICK)
+             .help("Позволяет кикнуть игрока из фракции"),
+   
+          new ArgumentSet(new InviteFraction(), new ExactStringArg("invite"), new PlayerArg())
+             .canExecute(CAN_INVITE)
+             .help("Позволяет пригласить игрока во фракцию"),
+   
+          new ArgumentSet(new SetFractionRank(), new ExactStringArg("setRank"), new PlayersAtSenderFraction(), new RanksAtSenderFraction())
+             .canExecute(CAN_INVITE)
+             .help("Позволяет установить ранг игроку во фракции")
+
        ).register(this);
     
     Bukkit.getPluginManager().registerEvents(new CommandListener(), this);
@@ -103,6 +96,6 @@ public final class Fractions extends JavaPlugin {
   
   @Override
   public void onDisable() {
-    super.onDisable();
+    yml.storeAll();
   }
 }

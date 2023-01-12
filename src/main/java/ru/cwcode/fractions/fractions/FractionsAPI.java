@@ -1,5 +1,6 @@
 package ru.cwcode.fractions.fractions;
 
+import net.kyori.adventure.audience.Audience;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import ru.cwcode.fractions.config.FractionsStorage;
@@ -71,5 +72,39 @@ public class FractionsAPI {
   
   public static Optional<FractionInstance> getFraction(String name) {
     return getFractions().stream().filter(x -> x.getName().equals(name)).findFirst();
+  }
+  
+  public static Audience getBanditAudience() {
+    return Audience.audience(PlayerStorage.getOnlineFractionPlayersWithFraction(getFraction(FractionName.BANDIT)));
+  }
+  
+  public static Audience getPoliceAudience() {
+    return Audience.audience(PlayerStorage.getOnlineFractionPlayersWithFraction(getFraction(FractionName.POLICE)));
+  }
+  
+  public static Audience getMilitaryAudience() {
+    return Audience.audience(PlayerStorage.getOnlineFractionPlayersWithFraction(getFraction(FractionName.MILITARY)));
+  }
+  
+  public static Audience getMilitaryAndPoliceAudience() {
+    return Audience.audience(PlayerStorage.getOnlineFractionPlayersWithFractions(getFraction(FractionName.MILITARY), getFraction(FractionName.POLICE)));
+  }
+  
+  public static FractionInstance getFraction(FractionName fractionName) {
+    return getFraction(fractionName.getName()).get();
+  }
+  
+  public enum FractionName {
+    BANDIT("Бандиты"), MILITARY("Военные"), POLICE("Полиция");
+    
+    private final String name;
+    
+    FractionName(String name) {
+      this.name = name;
+    }
+    
+    public String getName() {
+      return name;
+    }
   }
 }

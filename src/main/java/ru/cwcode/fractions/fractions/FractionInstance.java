@@ -6,6 +6,7 @@ import ru.cwcode.fractions.config.Messages;
 import ru.cwcode.fractions.config.PlayerStorage;
 import ru.cwcode.fractions.fractions.storage.FractionPlayer;
 import ru.cwcode.fractions.fractions.storage.Rank;
+import tkachgeek.config.minilocale.Placeholder;
 import tkachgeek.tkachutils.messages.MessageReturn;
 
 import java.util.ArrayList;
@@ -35,11 +36,6 @@ public class FractionInstance {
   public FractionInstance() {
   }
   
-  public FractionInstance setRanks(List<Rank> ranks) {
-    this.ranks = ranks;
-    return this;
-  }
-  
   public String getName() {
     return this.name;
   }
@@ -50,6 +46,11 @@ public class FractionInstance {
   
   public List<Rank> getRanks() {
     return this.ranks;
+  }
+  
+  public FractionInstance setRanks(List<Rank> ranks) {
+    this.ranks = ranks;
+    return this;
   }
   
   public boolean canLeave(FractionPlayer player) {
@@ -106,6 +107,7 @@ public class FractionInstance {
   }
   
   public void onJoin(FractionPlayer fractionPlayer) {
+    Messages.getInstance().you_joined_fraction_$name.send(fractionPlayer.getUUID(), Placeholder.add("name", getFormattedName()));
     fractionPlayer.setRank(getLowestRank());
   }
   
@@ -119,5 +121,9 @@ public class FractionInstance {
   
   public int getOnlinePlayers() {
     return PlayerStorage.getOnlineFractionPlayersWithFraction(this).size();
+  }
+  
+  public String getFormattedName() {
+    return getPrefix() + getName();
   }
 }
