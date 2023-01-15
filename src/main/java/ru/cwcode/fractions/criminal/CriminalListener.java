@@ -28,11 +28,9 @@ public class CriminalListener implements Listener {
     Player killer = e.getEntity().getKiller();
     if (killer != null) {
       FractionPlayer fractionPlayer = FractionPlayer.get(killer);
-      if (fractionPlayer.isPoliceman() || fractionPlayer.isMilitary()) {
-        return;
+      if (!fractionPlayer.isPoliceman() && !fractionPlayer.isMilitary()) {
+        CriminalStorage.getInstance().upWantedLevel(killer);
       }
-      
-      CriminalStorage.getInstance().upWantedLevel(killer);
     }
   }
   

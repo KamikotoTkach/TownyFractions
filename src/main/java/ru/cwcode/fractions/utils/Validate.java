@@ -71,6 +71,12 @@ public class Validate {
     }
   }
   
+  public static void youNotPrisoner(Player player) throws MessageReturn {
+    if (CriminalAPI.isPrisoner(player)) {
+      Messages.getInstance().you_is_prisoner.throwback();
+    }
+  }
+  
   public static void existPrison(String prison_name) throws MessageReturn {
     if (!CriminalAPI.hasPrison(prison_name)) {
       Messages.getInstance().hasnt_$prison.throwback(Placeholder.add("prison", prison_name));
@@ -84,13 +90,13 @@ public class Validate {
   }
   
   public static void isWanted(Player player) throws MessageReturn {
-    if (CriminalStorage.getInstance().isWanted(player)) {
+    if (!CriminalStorage.getInstance().isWanted(player)) {
       Messages.getInstance().is_wanted_$player.throwback(Placeholder.add("player", player.getName()));
     }
   }
   
   public static void isntWanted(Player player) throws MessageReturn {
-    if (!CriminalStorage.getInstance().isWanted(player)) {
+    if (CriminalStorage.getInstance().isWanted(player)) {
       Messages.getInstance().isnt_wanted_$player.throwback(Placeholder.add("player", player.getName()));
     }
   }

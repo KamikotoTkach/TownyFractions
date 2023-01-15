@@ -34,7 +34,7 @@ public class CriminalStorage extends YmlConfig implements Reloadable {
   }
   
   public static void load() {
-    instance = Fractions.yml.load("PrisonStorage", CriminalStorage.class);
+    instance = Fractions.yml.load("criminal", CriminalStorage.class);
   }
   
   public boolean hasPrison(String prisonName) {

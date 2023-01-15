@@ -48,6 +48,7 @@ public class Messages extends YmlConfig implements Reloadable {
   public Message you_need_to_register_this_territory_as_jail = new Message("<gold>Сперва нужно зарегистрировать данную территорию как тюрьму. \n<gray>/terr create Тюрьма <dark_gray>[название]<gray> и \n/terr claim <dark_gray>[название]<gray> \n(для этого её нужно купить через /plot claim");
   public Message is_wanted_$player = new Message("<yellow><player> <gold>объявлен в розыск");
   public Message isnt_wanted_$player = new Message("<yellow><player> <gold>не объявлен в розыск");
+  public Message you_is_prisoner = new Message("Вы не можете этого сделать, так как являетесь заключённым");
   
   public Messages() {
   }
