@@ -10,12 +10,12 @@ import java.util.List;
 public class FractionsArg extends Argument {
   @Override
   public boolean valid(String s) {
-    return FractionsAPI.getFractions().stream().anyMatch(x -> x.getName().equals(s));
+    return FractionsAPI.getFractions().stream().anyMatch(x -> x.name().equals(s));
   }
   
   @Override
   public List<String> completions(CommandSender commandSender) {
-    return FractionsAPI.getFractions().stream().map(FractionInstance::getName).toList();
+    return FractionsAPI.getFractions().stream().map(FractionInstance::name).toList();
   }
   
   @Override

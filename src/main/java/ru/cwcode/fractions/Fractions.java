@@ -2,15 +2,21 @@ package ru.cwcode.fractions;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.permissions.ServerOperator;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.cwcode.fractions.board.BoardListener;
 import ru.cwcode.fractions.commandBlocker.BlockCommandExecutor;
 import ru.cwcode.fractions.commandBlocker.CommandListener;
+import ru.cwcode.fractions.fractions.FractionPlayer;
 import ru.cwcode.fractions.fractions.commands.FractionInfo;
 import ru.cwcode.fractions.fractions.commands.argument.*;
 import ru.cwcode.fractions.fractions.commands.command.*;
 import ru.cwcode.fractions.fractions.commands.command.admin.AdminSetFraction;
-import ru.cwcode.fractions.fractions.storage.FractionPlayer;
+import ru.cwcode.fractions.fractions.commands.command.admin.AdminSetRestartTime;
+import ru.cwcode.fractions.prison.CriminalListener;
+import ru.cwcode.fractions.prison.commands.argument.PrisonersArg;
+import ru.cwcode.fractions.prison.commands.argument.PrisonsArg;
+import ru.cwcode.fractions.prison.commands.command.*;
 import ru.cwcode.logo.Logo;
 import tkachgeek.commands.command.ArgumentSet;
 import tkachgeek.commands.command.Command;
@@ -18,6 +24,8 @@ import tkachgeek.commands.command.arguments.ExactStringArg;
 import tkachgeek.commands.command.arguments.basic.StringArg;
 import tkachgeek.commands.command.arguments.bukkit.PlayerArg;
 import tkachgeek.commands.command.arguments.spaced.SpacedStringArg;
+import tkachgeek.config.yaml.FlushCommand;
+import tkachgeek.config.yaml.ReloadCommand;
 import tkachgeek.config.yaml.YmlConfigManager;
 
 import java.util.Optional;
@@ -31,9 +39,38 @@ public final class Fractions extends JavaPlugin {
   private static final Predicate<CommandSender> HASNT_FRACTION = x -> HAS_FRACTION.negate().test(x);
   private static final Predicate<CommandSender> CAN_INVITE = HAS_FRACTION; //todo:
   private static final Predicate<CommandSender> CAN_KICK = CAN_INVITE;
+  private static final Predicate<CommandSender> HAS_TOP_RANK = player -> {
+    var fractionPlayer = FractionPlayer.get(player);
+    return fractionPlayer.isPresent() && fractionPlayer.get().hasTopRank();
+  };
+  private static final Predicate<CommandSender> IS_MINISTRO_DELLA_POLIZIA = player -> {
+    var fractionPlayer = FractionPlayer.get(player);
+    return fractionPlayer.isPresent() && fractionPlayer.get().hasTopRank() && fractionPlayer.get().isPoliceman();
+  };
+  private static final Predicate<CommandSender> IS_MINISTRO_DELLA_OBORONA = player -> {
+    var fractionPlayer = FractionPlayer.get(player);
+    return fractionPlayer.isPresent() && fractionPlayer.get().hasTopRank() && fractionPlayer.get().isMilitary();
+  };
+  private static final Predicate<CommandSender> IS_POLICEMAN = player -> {
+    var fractionPlayer = FractionPlayer.get(player);
+    return fractionPlayer.isPresent() && fractionPlayer.get().isPoliceman();
+  };
+  private static final Predicate<CommandSender> IS_MILITARY = player -> {
+    var fractionPlayer = FractionPlayer.get(player);
+    return fractionPlayer.isPresent() && fractionPlayer.get().isMilitary();
+  };
+  private static final Predicate<CommandSender> IS_BANDIT = player -> {
+    var fractionPlayer = FractionPlayer.get(player);
+    return fractionPlayer.isPresent() && fractionPlayer.get().isBandit();
+  };
+  
   private static final Predicate<CommandSender> HAS_BANDIT_FRACTION = x -> {
     Optional<FractionPlayer> fractionPlayer = FractionPlayer.get(x);
     return fractionPlayer.isPresent() && fractionPlayer.get().isBandit() && fractionPlayer.get().hasTopRank();
+  };
+  private static final Predicate<CommandSender> HAS_INVITE = x -> {
+    Optional<FractionPlayer> fractionPlayer = FractionPlayer.get(x);
+    return fractionPlayer.isPresent() && fractionPlayer.get().getInvitedTo().size() > 0;
   };
   public static JavaPlugin plugin;
   public static YmlConfigManager yml;
@@ -41,19 +78,23 @@ public final class Fractions extends JavaPlugin {
   @Override
   public void onEnable() {
     yml = new YmlConfigManager(this);
+    
     plugin = this;
     Logo.sendLogo();
     
     new Command("fraction", "fraction", new FractionInfo())
        .subCommands(
           new Command("admin")
-             .arguments(
+             .subCommands(
+                FlushCommand.get(yml),
+                ReloadCommand.get(yml)
+             ).arguments(
                 new ArgumentSet(new AdminSetFraction(), new ExactStringArg("editPlayer"),
                                 new PlayerArg(),
                                 new FractionsArg(),
                                 new RanksAtFraction(-1).optional())
                    .help("Позволяет изменить игроку фракцию или ранг"),
-      
+         
                 new ArgumentSet(new BlockCommandExecutor(), new ExactStringArg("blockCmd"),
                                 new FractionsArg(),
                                 new RanksAtFraction(-1),
@@ -64,7 +105,7 @@ public final class Fractions extends JavaPlugin {
        ).arguments(
    
           new ArgumentSet(new JoinFraction(), new ExactStringArg("join"), new InvitedToFractionsArg())
-             .canExecute(HASNT_FRACTION)
+             .canExecute(HASNT_FRACTION.and(HAS_INVITE))
              .help("Позволяет вступить во фракцию, в которую вас пригласили"),
    
           new ArgumentSet(new RenameRank(), new ExactStringArg("renameRank"), new RanksAtSenderFraction(), new StringArg("новое название ранга"))

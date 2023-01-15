@@ -1,4 +1,4 @@
-package ru.cwcode.fractions.fractions.storage;
+package ru.cwcode.fractions.fractions;
 
 public class Permissions {
   private boolean canChangeMembers = false; //изменение состава

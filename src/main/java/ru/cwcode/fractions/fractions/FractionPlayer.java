@@ -1,8 +1,7 @@
-package ru.cwcode.fractions.fractions.storage;
+package ru.cwcode.fractions.fractions;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -12,7 +11,6 @@ import org.jetbrains.annotations.Nullable;
 import ru.cwcode.fractions.config.FractionsStorage;
 import ru.cwcode.fractions.config.Messages;
 import ru.cwcode.fractions.config.PlayerStorage;
-import ru.cwcode.fractions.fractions.FractionInstance;
 import tkachgeek.config.minilocale.Placeholder;
 import tkachgeek.tkachutils.messages.MessageReturn;
 
@@ -21,15 +19,15 @@ import java.util.*;
 public class FractionPlayer implements Audience {
   private final List<String> invitedTo = new ArrayList<>();
   transient UUID uuid = null;
-  private FractionInstance fraction = null;
-  private Rank rank = null;
+  private String fraction = null;
+  private String rank = null;
   
   public FractionPlayer() {
   }
   
   public FractionPlayer(FractionInstance fraction, Rank rank, UUID uuid) {
-    this.fraction = fraction;
-    this.rank = rank;
+    this.fraction = fraction.name();
+    this.rank = rank.name();
   }
   
   public FractionPlayer(UUID uniqueId) {
@@ -57,11 +55,11 @@ public class FractionPlayer implements Audience {
   }
   
   public Rank getRank() {
-    return rank;
+    return getFraction().getRank(rank).get();
   }
   
   public void setRank(Rank rank) {
-    this.rank = rank;
+    this.rank = rank.name();
     Messages.getInstance().your_rank_was_updated_to_$rank.send(getUUID(), Placeholder.add("rank", rank.name()));
   }
   
@@ -70,29 +68,26 @@ public class FractionPlayer implements Audience {
   }
   
   public boolean canChangeRank() {
-    return rank != null && rank.permissions().canChangeRank();
+    return rank != null && getRank().permissions().canChangeRank();
   }
   
   public boolean canChangeMembers() {
-    return rank.permissions().canChangeMembers();
+    return getRank().permissions().canChangeMembers();
   }
   
-  public int getPriority() {
-    return fraction.getRanks().indexOf(rank);
-  }
   
   public @Nullable FractionInstance getFraction() {
-    return this.fraction;
+    return fraction == null ? null : FractionsAPI.getFraction(fraction).get();
   }
   
   public void setFraction(FractionInstance fraction) throws MessageReturn {
     leaveFraction();
-    this.fraction = fraction;
-    this.fraction.onJoin(this);
+    this.fraction = fraction.name();
+    getFraction().onJoin(this);
   }
   
   public boolean isGreater(FractionPlayer toCheck) {
-    return fraction.getRanks().indexOf(rank) > fraction.getRanks().indexOf(toCheck.rank);
+    return getFraction().getRanks().indexOf(rank) > getFraction().getRanks().indexOf(toCheck.rank);
   }
   
   @Override
@@ -115,7 +110,7 @@ public class FractionPlayer implements Audience {
   }
   
   public boolean isGreaterOrEquals(Rank toCheck) {
-    return fraction.getRanks().indexOf(rank) >= fraction.getRanks().indexOf(toCheck);
+    return getFraction().getRanks().indexOf(getRank()) >= getFraction().getRanks().indexOf(toCheck);
   }
   
   public List<String> getInvitedTo() {
@@ -145,7 +140,7 @@ public class FractionPlayer implements Audience {
     }
   
     invitedTo.add(fraction_name);
-    Messages.getInstance().you_invited_$fraction.send(getUUID(), Placeholder.add("fraction", fraction.getName()));
+    Messages.getInstance().you_invited_$fraction.send(getUUID(), Placeholder.add("fraction", getFraction().name()));
   }
   
   public void removeInvite(String fraction_name) throws MessageReturn {
@@ -166,26 +161,26 @@ public class FractionPlayer implements Audience {
     if (!fraction.isPresent()) {
       Messages.getInstance().fraction_$name_not_exist.throwback(Placeholder.add("name", fractionName));
     }
-    
-    this.fraction = fraction.get();
+  
+    this.fraction = fraction.get().name();
   }
   
   public void leaveFraction() throws MessageReturn {
     if (fraction == null) return;
-    fraction.onLeave(this);
-    Messages.getInstance().you_leaved_$fraction.send(getUUID(), Placeholder.add("fraction", fraction.getName()));
+    getFraction().onLeave(this);
+    Messages.getInstance().you_leaved_$fraction.send(getUUID(), Placeholder.add("fraction", getFraction().name()));
     fraction = null;
     rank = null;
   }
   
   public void kickedFraction() {
-    Messages.getInstance().you_kicked_$fraction.send(getUUID(), Placeholder.add("fraction", fraction.getName()));
+    Messages.getInstance().you_kicked_$fraction.send(getUUID(), Placeholder.add("fraction", getFraction().name()));
     fraction = null;
     rank = null;
   }
   
   public String getFormattedRank() {
-    return fraction.getPrefix() + rank.name();
+    return getFraction().getPrefix() + getRank().name();
   }
   
   public boolean hasTopRank() {
@@ -202,14 +197,6 @@ public class FractionPlayer implements Audience {
   
   public boolean isMilitary() {
     return hasFraction() && getFraction().isMilitaryFraction();
-  }
-  
-  @Override
-  public void sendMessage(@NonNull ComponentLike message) {
-    OfflinePlayer player = getPlayer();
-    if (player.isOnline()) {
-      player.getPlayer().sendMessage(message);
-    }
   }
   
   @Override

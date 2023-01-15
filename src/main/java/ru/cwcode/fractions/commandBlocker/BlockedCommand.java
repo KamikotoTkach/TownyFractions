@@ -1,8 +1,8 @@
 package ru.cwcode.fractions.commandBlocker;
 
 import ru.cwcode.fractions.config.Messages;
-import ru.cwcode.fractions.fractions.storage.FractionPlayer;
-import ru.cwcode.fractions.fractions.storage.Rank;
+import ru.cwcode.fractions.fractions.FractionPlayer;
+import ru.cwcode.fractions.fractions.Rank;
 import tkachgeek.tkachutils.messages.MessageReturn;
 
 import java.util.ArrayList;
@@ -58,7 +58,7 @@ public class BlockedCommand {
     }
     
     if (fraction_player.hasFraction()
-       && fraction_player.getFraction().getName().equals(fraction_name)
+       && fraction_player.getFraction().name().equals(fraction_name)
        && fraction_player.getFraction().isFractionRank(rank_name)) {
       Rank rank = fraction_player.getFraction().getRank(rank_name).get();
       return fraction_player.isGreaterOrEquals(rank);

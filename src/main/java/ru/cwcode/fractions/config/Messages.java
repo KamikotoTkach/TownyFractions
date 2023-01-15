@@ -1,11 +1,12 @@
 package ru.cwcode.fractions.config;
 
 import ru.cwcode.fractions.Fractions;
+import tkachgeek.config.base.Reloadable;
 import tkachgeek.config.minilocale.Message;
 import tkachgeek.config.minilocale.messagePacks.DefaultMessagePack;
 import tkachgeek.config.yaml.YmlConfig;
 
-public class Messages extends YmlConfig {
+public class Messages extends YmlConfig implements Reloadable {
   static Messages instance;
   public DefaultMessagePack defaults = new DefaultMessagePack();
   public Message you_not_general = new Message("<gold>Необходимо обладать рангом не ниже <yellow>\"Генерал\"");
@@ -46,5 +47,10 @@ public class Messages extends YmlConfig {
   
   public static void load() {
     instance = Fractions.yml.load("Messages", Messages.class);
+  }
+  
+  @Override
+  public void reload() {
+    load();
   }
 }

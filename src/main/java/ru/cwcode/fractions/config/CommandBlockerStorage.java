@@ -2,13 +2,14 @@ package ru.cwcode.fractions.config;
 
 import ru.cwcode.fractions.Fractions;
 import ru.cwcode.fractions.commandBlocker.BlockedCommand;
+import tkachgeek.config.base.Reloadable;
 import tkachgeek.config.yaml.YmlConfig;
 import tkachgeek.tkachutils.messages.MessageReturn;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommandBlockerStorage extends YmlConfig {
+public class CommandBlockerStorage extends YmlConfig implements Reloadable {
   static CommandBlockerStorage instance;
   public final List<BlockedCommand> blocked_commands = new ArrayList<>();
   
@@ -30,9 +31,14 @@ public class CommandBlockerStorage extends YmlConfig {
         blocked_command.blockCMD(command); //throwback
       }
     }
-    
+  
     BlockedCommand blocked_command = new BlockedCommand(fraction_name, rank_name);
     blocked_commands.add(blocked_command);
     blocked_command.blockCMD(command);
+  }
+  
+  @Override
+  public void reload() {
+  
   }
 }

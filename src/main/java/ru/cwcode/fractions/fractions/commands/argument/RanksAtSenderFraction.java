@@ -1,7 +1,7 @@
 package ru.cwcode.fractions.fractions.commands.argument;
 
 import org.bukkit.command.CommandSender;
-import ru.cwcode.fractions.fractions.storage.FractionPlayer;
+import ru.cwcode.fractions.fractions.FractionPlayer;
 import tkachgeek.commands.command.Argument;
 import tkachgeek.tkachutils.text.SpacesHider;
 

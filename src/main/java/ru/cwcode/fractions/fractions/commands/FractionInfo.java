@@ -2,7 +2,7 @@ package ru.cwcode.fractions.fractions.commands;
 
 import ru.cwcode.fractions.config.Messages;
 import ru.cwcode.fractions.config.PlayerStorage;
-import ru.cwcode.fractions.fractions.storage.Rank;
+import ru.cwcode.fractions.fractions.Rank;
 import ru.cwcode.fractions.utils.Validate;
 import tkachgeek.commands.command.arguments.executor.Executor;
 import tkachgeek.config.minilocale.Placeholder;
@@ -17,8 +17,8 @@ public class FractionInfo extends Executor {
     var fraction = fp.getFraction();
     var totalPlayers = fraction.getTotalPlayers();
     var onlinePlayers = fraction.getOnlinePlayers();
-    
-    Messages.getInstance().fractionInfoHeader$name$totalPlayers$online.send(sender(), Placeholder.add("name", fraction.getPrefix() + fraction.getName())
+  
+    Messages.getInstance().fractionInfoHeader$name$totalPlayers$online.send(sender(), Placeholder.add("name", fraction.getPrefix() + fraction.name())
                                                                                                  .add("totalPlayers", totalPlayers)
                                                                                                  .add("online", onlinePlayers));
     

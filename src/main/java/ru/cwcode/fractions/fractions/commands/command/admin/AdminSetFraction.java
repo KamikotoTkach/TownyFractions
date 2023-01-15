@@ -3,7 +3,7 @@ package ru.cwcode.fractions.fractions.commands.command.admin;
 import ru.cwcode.fractions.config.Messages;
 import ru.cwcode.fractions.config.PlayerStorage;
 import ru.cwcode.fractions.fractions.FractionsAPI;
-import ru.cwcode.fractions.fractions.storage.Rank;
+import ru.cwcode.fractions.fractions.Rank;
 import ru.cwcode.fractions.utils.Validate;
 import tkachgeek.commands.command.arguments.executor.Executor;
 import tkachgeek.tkachutils.messages.MessageReturn;

@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import ru.cwcode.fractions.config.Messages;
 import ru.cwcode.fractions.config.PlayerStorage;
-import ru.cwcode.fractions.fractions.storage.FractionPlayer;
-import ru.cwcode.fractions.fractions.storage.Rank;
 import tkachgeek.config.minilocale.Placeholder;
 import tkachgeek.tkachutils.messages.MessageReturn;
 
@@ -36,7 +34,7 @@ public class FractionInstance {
   public FractionInstance() {
   }
   
-  public String getName() {
+  public String name() {
     return this.name;
   }
   
@@ -124,6 +122,6 @@ public class FractionInstance {
   }
   
   public String getFormattedName() {
-    return getPrefix() + getName();
+    return getPrefix() + name();
   }
 }

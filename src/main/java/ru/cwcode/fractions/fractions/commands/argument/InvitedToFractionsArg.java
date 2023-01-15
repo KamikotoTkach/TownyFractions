@@ -1,8 +1,8 @@
 package ru.cwcode.fractions.fractions.commands.argument;
 
 import org.bukkit.command.CommandSender;
+import ru.cwcode.fractions.fractions.FractionPlayer;
 import ru.cwcode.fractions.fractions.FractionsAPI;
-import ru.cwcode.fractions.fractions.storage.FractionPlayer;
 import tkachgeek.commands.command.Argument;
 
 import java.util.Collections;

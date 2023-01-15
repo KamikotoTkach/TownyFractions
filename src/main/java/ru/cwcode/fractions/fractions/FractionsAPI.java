@@ -6,8 +6,6 @@ import org.bukkit.entity.Player;
 import ru.cwcode.fractions.config.FractionsStorage;
 import ru.cwcode.fractions.config.Messages;
 import ru.cwcode.fractions.config.PlayerStorage;
-import ru.cwcode.fractions.fractions.storage.FractionPlayer;
-import ru.cwcode.fractions.fractions.storage.Rank;
 import ru.cwcode.fractions.utils.Validate;
 import tkachgeek.tkachutils.messages.MessageReturn;
 
@@ -38,7 +36,7 @@ public class FractionsAPI {
   
     Validate.canChangeMembers(fraction_general);
   
-    fraction_player.addInvite(fraction_general.getFraction().getName());
+    fraction_player.addInvite(fraction_general.getFraction().name());
     Messages.getInstance().player_invited_successfully.send(general);
   }
   
@@ -71,7 +69,7 @@ public class FractionsAPI {
   }
   
   public static Optional<FractionInstance> getFraction(String name) {
-    return getFractions().stream().filter(x -> x.getName().equals(name)).findFirst();
+    return getFractions().stream().filter(x -> x.name().equals(name)).findFirst();
   }
   
   public static Audience getBanditAudience() {
@@ -92,6 +90,13 @@ public class FractionsAPI {
   
   public static FractionInstance getFraction(FractionName fractionName) {
     return getFraction(fractionName.getName()).get();
+  }
+  
+  public static boolean hasTopRank(CommandSender sender) {
+    var fp = FractionPlayer.get(sender);
+    if (fp.isEmpty()) return false;
+    if (!fp.get().hasFraction()) return false;
+    return fp.get().getFraction().hasTopRank(fp.get());
   }
   
   public enum FractionName {

@@ -1,18 +1,15 @@
 package ru.cwcode.fractions.config;
 
 import ru.cwcode.fractions.Fractions;
-import ru.cwcode.fractions.fractions.BanditFraction;
-import ru.cwcode.fractions.fractions.FractionInstance;
-import ru.cwcode.fractions.fractions.MilitaryFraction;
-import ru.cwcode.fractions.fractions.PoliceFraction;
-import ru.cwcode.fractions.fractions.storage.Rank;
+import ru.cwcode.fractions.fractions.*;
+import tkachgeek.config.base.Reloadable;
 import tkachgeek.config.yaml.YmlConfig;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class FractionsStorage extends YmlConfig {
+public class FractionsStorage extends YmlConfig implements Reloadable {
   static FractionsStorage instance;
   
   transient private final List<Rank> defaultPoliceRanks = new ArrayList<>() {{
@@ -76,18 +73,24 @@ public class FractionsStorage extends YmlConfig {
   
   public boolean hasFraction(String fraction_name) {
     for (FractionInstance fraction : fractions) {
-      if (fraction.getName().equals(fraction_name)) {
+      if (fraction.name().equals(fraction_name)) {
         return true;
       }
     }
     return false;
   }
+  
   public Optional<FractionInstance> getFraction(String fraction_name) {
     for (FractionInstance fraction : fractions) {
-      if (fraction.getName().equals(fraction_name)) {
+      if (fraction.name().equals(fraction_name)) {
         return Optional.of(fraction);
       }
     }
     return Optional.empty();
+  }
+  
+  @Override
+  public void reload() {
+    load();
   }
 }

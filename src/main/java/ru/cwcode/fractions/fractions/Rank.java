@@ -1,4 +1,4 @@
-package ru.cwcode.fractions.fractions.storage;
+package ru.cwcode.fractions.fractions;
 
 import java.util.Objects;
 

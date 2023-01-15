@@ -1,7 +1,10 @@
 package ru.cwcode.fractions.utils;
 
+import org.bukkit.entity.Player;
 import ru.cwcode.fractions.config.Messages;
-import ru.cwcode.fractions.fractions.storage.FractionPlayer;
+import ru.cwcode.fractions.fractions.FractionPlayer;
+import ru.cwcode.fractions.prison.CriminalAPI;
+import ru.cwcode.fractions.prison.CriminalStorage;
 import tkachgeek.config.minilocale.Placeholder;
 import tkachgeek.tkachutils.messages.MessageReturn;
 
@@ -15,7 +18,7 @@ public class Validate {
   }
   
   public static void equalFractions(FractionPlayer fraction_general, FractionPlayer fraction_player) throws MessageReturn {
-    if (!fraction_general.getFraction().getName().equalsIgnoreCase(fraction_player.getFraction().getName())) {
+    if (!fraction_general.getFraction().name().equalsIgnoreCase(fraction_player.getFraction().name())) {
       Messages.getInstance().you_are_not_in_the_same_fraction.throwback();
     }
   }
@@ -40,6 +43,12 @@ public class Validate {
   
   public static void isPresent(Optional<?> object, String name) throws MessageReturn {
     if (object.isEmpty()) {
+      Messages.getInstance().$name_not_exist.throwback(Placeholder.add("name", name));
+    }
+  }
+  
+  public static void notNull(Object object, String name) throws MessageReturn {
+    if (object != null) {
       Messages.getInstance().$name_not_exist.throwback(Placeholder.add("name", name));
     }
   }

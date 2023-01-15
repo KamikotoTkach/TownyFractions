@@ -2,7 +2,7 @@ package ru.cwcode.fractions.fractions.commands.argument;
 
 import org.bukkit.command.CommandSender;
 import ru.cwcode.fractions.fractions.FractionsAPI;
-import ru.cwcode.fractions.fractions.storage.Rank;
+import ru.cwcode.fractions.fractions.Rank;
 import tkachgeek.commands.command.arguments.ArgumentWithOffset;
 import tkachgeek.tkachutils.text.SpacesHider;
 

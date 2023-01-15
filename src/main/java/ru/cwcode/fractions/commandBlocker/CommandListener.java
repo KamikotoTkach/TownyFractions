@@ -6,7 +6,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import ru.cwcode.fractions.config.CommandBlockerStorage;
 import ru.cwcode.fractions.config.Messages;
 import ru.cwcode.fractions.config.PlayerStorage;
-import ru.cwcode.fractions.fractions.storage.FractionPlayer;
+import ru.cwcode.fractions.fractions.FractionPlayer;
 
 public class CommandListener implements Listener {
   @EventHandler

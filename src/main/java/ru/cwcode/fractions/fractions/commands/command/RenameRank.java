@@ -1,7 +1,7 @@
 package ru.cwcode.fractions.fractions.commands.command;
 
 import ru.cwcode.fractions.config.Messages;
-import ru.cwcode.fractions.fractions.storage.FractionPlayer;
+import ru.cwcode.fractions.fractions.FractionPlayer;
 import ru.cwcode.fractions.utils.Validate;
 import tkachgeek.commands.command.arguments.executor.Executor;
 import tkachgeek.tkachutils.messages.MessageReturn;

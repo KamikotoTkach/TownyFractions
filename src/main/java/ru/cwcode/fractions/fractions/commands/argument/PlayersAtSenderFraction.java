@@ -3,7 +3,7 @@ package ru.cwcode.fractions.fractions.commands.argument;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import ru.cwcode.fractions.config.PlayerStorage;
-import ru.cwcode.fractions.fractions.storage.FractionPlayer;
+import ru.cwcode.fractions.fractions.FractionPlayer;
 import tkachgeek.commands.command.Argument;
 
 import java.util.Collections;

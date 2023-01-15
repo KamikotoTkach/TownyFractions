@@ -8,8 +8,10 @@ import fr.minuskube.netherboard.bukkit.BPlayerBoard;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import ru.cwcode.fractions.Fractions;
-import ru.cwcode.fractions.fractions.storage.FractionPlayer;
+import ru.cwcode.fractions.fractions.FractionPlayer;
+import ru.cwcode.fractions.prison.CriminalStorage;
 import tkachgeek.banks.Banks;
+import tkachgeek.config.minilocale.Placeholder;
 import tkachgeek.townyterritory.TerrAPI;
 import tkachgeek.townyterritory.territory.Territory;
 
@@ -169,8 +171,8 @@ public class Board {
     
     Town townInst = TownyAPI.getInstance().getTown(player.getLocation());
     if (townInst != null) location = townInst.getName();
-    
-    Optional<Territory> territoryAt = TerrAPI.getTerritoryAt(player);
+  
+    Optional<Territory> territoryAt = TerrAPI.getTerritoryBy(player);
     if (territoryAt.isPresent()) location = territoryAt.get().getName();
     
     return location;
