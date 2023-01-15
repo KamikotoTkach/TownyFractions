@@ -1,4 +1,4 @@
-package ru.cwcode.fractions.prison;
+package ru.cwcode.fractions.criminal;
 
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;

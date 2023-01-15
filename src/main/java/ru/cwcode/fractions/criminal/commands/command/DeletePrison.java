@@ -1,7 +1,7 @@
-package ru.cwcode.fractions.prison.commands.command;
+package ru.cwcode.fractions.criminal.commands.command;
 
 import ru.cwcode.fractions.config.Messages;
-import ru.cwcode.fractions.prison.CriminalAPI;
+import ru.cwcode.fractions.criminal.CriminalAPI;
 import tkachgeek.commands.command.arguments.executor.Executor;
 import tkachgeek.tkachutils.messages.MessageReturn;
 

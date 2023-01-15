@@ -2,9 +2,9 @@ package ru.cwcode.fractions.utils;
 
 import org.bukkit.entity.Player;
 import ru.cwcode.fractions.config.Messages;
+import ru.cwcode.fractions.criminal.CriminalAPI;
+import ru.cwcode.fractions.criminal.CriminalStorage;
 import ru.cwcode.fractions.fractions.FractionPlayer;
-import ru.cwcode.fractions.prison.CriminalAPI;
-import ru.cwcode.fractions.prison.CriminalStorage;
 import tkachgeek.config.minilocale.Placeholder;
 import tkachgeek.tkachutils.messages.MessageReturn;
 

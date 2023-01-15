@@ -1,7 +1,7 @@
-package ru.cwcode.fractions.prison.commands.argument;
+package ru.cwcode.fractions.criminal.commands.argument;
 
 import org.bukkit.command.CommandSender;
-import ru.cwcode.fractions.prison.CriminalStorage;
+import ru.cwcode.fractions.criminal.CriminalStorage;
 import tkachgeek.commands.command.Argument;
 
 import java.util.List;

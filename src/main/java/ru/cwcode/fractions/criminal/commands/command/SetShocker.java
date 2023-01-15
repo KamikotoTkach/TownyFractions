@@ -1,8 +1,8 @@
-package ru.cwcode.fractions.prison.commands.command;
+package ru.cwcode.fractions.criminal.commands.command;
 
 import org.bukkit.inventory.ItemStack;
 import ru.cwcode.fractions.config.Messages;
-import ru.cwcode.fractions.prison.CriminalStorage;
+import ru.cwcode.fractions.criminal.CriminalStorage;
 import tkachgeek.commands.command.arguments.executor.Executor;
 import tkachgeek.tkachutils.messages.MessageReturn;
 
