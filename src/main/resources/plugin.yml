@@ -5,5 +5,7 @@ api-version: 1.16
 depend: [ Towny, QualityArmory, Banks, Vehicles, TownyTerritory, Vault, Commands, Config ]
 commands:
   fraction:
+  prison:
+  setshoker:
   blockCMD:
 

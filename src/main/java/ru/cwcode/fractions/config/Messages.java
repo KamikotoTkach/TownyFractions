@@ -36,6 +36,18 @@ public class Messages extends YmlConfig implements Reloadable {
   public Message fractionInfoRank$name$salary = new Message("<gray>- <gold><name> <gray>[<gold><salary>$<gray>]");
   public Message fractionInfoRanksHeader = new Message("Ранги:");
   public Message you_joined_fraction_$name = new Message("<gold>Вы вступили во фракцию <yellow><name>");
+  public Message has_prison = new Message("<gold>Тюрьма с таким названием уже существует");
+  public Message hasnt_$prison = new Message("<gold>Тюрьма с названием <prison> не существует");
+  public Message you_has_been_arrested = new Message("<gold>Вы были арестованы");
+  public Message you_has_been_demobilized = new Message("<gold>Вы были освобождены");
+  public Message prison_created_successfully = new Message("<gold>Тюрьма успешно создана");
+  public Message prison_deleted_successfully = new Message("<gold>Тюрьма успешно удалена");
+  public Message isnt_prisoner = new Message("<gold>Этот игрок не заключённый");
+  public Message is_prisoner = new Message("<gold>Этот игрок уже мотает срок, отсиживается под шконкой, сидит в тюряжке, зэк");
+  public Message isnt_shocked = new Message("<gold>Вы не смотрите на парализованного игрока");
+  public Message you_need_to_register_this_territory_as_jail = new Message("<gold>Сперва нужно зарегистрировать данную территорию как тюрьму. \n<gray>/terr create Тюрьма <dark_gray>[название]<gray> и \n/terr claim <dark_gray>[название]<gray> \n(для этого её нужно купить через /plot claim");
+  public Message is_wanted_$player = new Message("<yellow><player> <gold>объявлен в розыск");
+  public Message isnt_wanted_$player = new Message("<yellow><player> <gold>не объявлен в розыск");
   
   public Messages() {
   }

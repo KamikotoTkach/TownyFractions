@@ -21,6 +21,7 @@ import ru.cwcode.logo.Logo;
 import tkachgeek.commands.command.ArgumentSet;
 import tkachgeek.commands.command.Command;
 import tkachgeek.commands.command.arguments.ExactStringArg;
+import tkachgeek.commands.command.arguments.TimeArg;
 import tkachgeek.commands.command.arguments.basic.StringArg;
 import tkachgeek.commands.command.arguments.bukkit.PlayerArg;
 import tkachgeek.commands.command.arguments.spaced.SpacedStringArg;
@@ -32,12 +33,15 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public final class Fractions extends JavaPlugin {
-  private static final Predicate<CommandSender> HAS_FRACTION = x -> {
-    var fractionPlayer = FractionPlayer.get(x);
+  private static final Predicate<CommandSender> HAS_FRACTION = player -> {
+    var fractionPlayer = FractionPlayer.get(player);
     return fractionPlayer.isPresent() && fractionPlayer.get().hasFraction();
   };
-  private static final Predicate<CommandSender> HASNT_FRACTION = x -> HAS_FRACTION.negate().test(x);
-  private static final Predicate<CommandSender> CAN_INVITE = HAS_FRACTION; //todo:
+  private static final Predicate<CommandSender> HASNT_FRACTION = player -> HAS_FRACTION.negate().test(player);
+  private static final Predicate<CommandSender> CAN_INVITE = player -> {
+    var fractionPlayer = FractionPlayer.get(player);
+    return fractionPlayer.isPresent() && fractionPlayer.get().hasTopRank();
+  };
   private static final Predicate<CommandSender> CAN_KICK = CAN_INVITE;
   private static final Predicate<CommandSender> HAS_TOP_RANK = player -> {
     var fractionPlayer = FractionPlayer.get(player);
@@ -81,8 +85,8 @@ public final class Fractions extends JavaPlugin {
     
     plugin = this;
     Logo.sendLogo();
-    
-    new Command("fraction", "fraction", new FractionInfo())
+  
+    new Command("fraction", new FractionInfo())
        .subCommands(
           new Command("admin")
              .subCommands(
@@ -94,16 +98,17 @@ public final class Fractions extends JavaPlugin {
                                 new FractionsArg(),
                                 new RanksAtFraction(-1).optional())
                    .help("Позволяет изменить игроку фракцию или ранг"),
-         
+   
                 new ArgumentSet(new BlockCommandExecutor(), new ExactStringArg("blockCmd"),
                                 new FractionsArg(),
                                 new RanksAtFraction(-1),
                                 new SpacedStringArg("команда"))
-                   .help("Позволяет заблокировать команду для всех игроков, кроме тех, кто имеет указанную фракцию и указанный ранг (или ранг выше)")
-             )
-
-       ).arguments(
+                   .help("Позволяет заблокировать команду для всех игроков, кроме тех, кто имеет указанную фракцию и указанный ранг (или ранг выше)"),
    
+                new ArgumentSet(new AdminSetRestartTime(), new ExactStringArg("setRestartTime"),
+                                new TimeArg())
+             )
+       ).arguments(
           new ArgumentSet(new JoinFraction(), new ExactStringArg("join"), new InvitedToFractionsArg())
              .canExecute(HASNT_FRACTION.and(HAS_INVITE))
              .help("Позволяет вступить во фракцию, в которую вас пригласили"),
@@ -130,9 +135,40 @@ public final class Fractions extends JavaPlugin {
              .help("Позволяет установить ранг игроку во фракции")
 
        ).register(this);
-    
+  
+    new Command("prison")
+       .arguments(
+          new ArgumentSet(
+             new CreatePrison(),
+             new ExactStringArg("create"),
+             new StringArg("название").optional()
+          ).canExecute(IS_MINISTRO_DELLA_POLIZIA.or(ServerOperator::isOp)),
+        
+          new ArgumentSet(
+             new DeletePrison(),
+             new ExactStringArg("delete"),
+             new StringArg("название").optional()
+          ).canExecute(IS_MINISTRO_DELLA_POLIZIA.or(ServerOperator::isOp)),
+        
+          new ArgumentSet(
+             new PrisonPut(),
+             new PrisonsArg().optional()
+          ).canExecute(IS_POLICEMAN),
+        
+          new ArgumentSet(
+             new PrisonDemobilize(),
+             new ExactStringArg("demobilize"),
+             new PrisonersArg()
+          ).canExecute(IS_MINISTRO_DELLA_POLIZIA.or(ServerOperator::isOp))
+     
+       ).register(this);
+  
+    new Command("setshoker", new SetShocker())
+       .register(this);
+  
     Bukkit.getPluginManager().registerEvents(new CommandListener(), this);
     Bukkit.getPluginManager().registerEvents(new BoardListener(), this);
+    Bukkit.getPluginManager().registerEvents(new CriminalListener(), this);
   }
   
   @Override

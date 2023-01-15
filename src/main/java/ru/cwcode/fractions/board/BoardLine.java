@@ -2,10 +2,12 @@ package ru.cwcode.fractions.board;
 
 public enum BoardLine {
   data_time,
-  location,
-  money,
-  tax,
+  wanted,
+  player,
   rank,
+  money,
+  location,
+  tax,
   fine,
   server_online,
   restart_time,
