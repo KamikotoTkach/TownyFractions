@@ -17,6 +17,7 @@ import ru.cwcode.fractions.fractions.commands.argument.*;
 import ru.cwcode.fractions.fractions.commands.command.*;
 import ru.cwcode.fractions.fractions.commands.command.admin.AdminSetFraction;
 import ru.cwcode.fractions.fractions.commands.command.admin.AdminSetRestartTime;
+import ru.cwcode.fractions.fractions.commands.command.admin.AdminSetWanted;
 import ru.cwcode.logo.Logo;
 import tkachgeek.commands.command.ArgumentSet;
 import tkachgeek.commands.command.Command;
@@ -33,49 +34,54 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public final class Fractions extends JavaPlugin {
-  private static final Predicate<CommandSender> HAS_FRACTION = player -> {
+  public static final Predicate<CommandSender> HAS_FRACTION = player -> {
     var fractionPlayer = FractionPlayer.get(player);
     return fractionPlayer.isPresent() && fractionPlayer.get().hasFraction();
   };
-  private static final Predicate<CommandSender> HASNT_FRACTION = player -> HAS_FRACTION.negate().test(player);
-  private static final Predicate<CommandSender> CAN_INVITE = player -> {
+  public static final Predicate<CommandSender> HASNT_FRACTION = player -> HAS_FRACTION.negate().test(player);
+  public static final Predicate<CommandSender> CAN_RAID = player -> {
+    var fractionPlayer = FractionPlayer.get(player);
+    return fractionPlayer.isPresent() && (!fractionPlayer.get().hasFraction() || fractionPlayer.get().canRaid());
+  };
+  public static final Predicate<CommandSender> CAN_INVITE = player -> {
     var fractionPlayer = FractionPlayer.get(player);
     return fractionPlayer.isPresent() && fractionPlayer.get().hasTopRank();
   };
-  private static final Predicate<CommandSender> CAN_KICK = CAN_INVITE;
-  private static final Predicate<CommandSender> HAS_TOP_RANK = player -> {
+  public static final Predicate<CommandSender> CAN_KICK = CAN_INVITE;
+  public static final Predicate<CommandSender> HAS_TOP_RANK = player -> {
     var fractionPlayer = FractionPlayer.get(player);
     return fractionPlayer.isPresent() && fractionPlayer.get().hasTopRank();
   };
-  private static final Predicate<CommandSender> IS_MINISTRO_DELLA_POLIZIA = player -> {
+  public static final Predicate<CommandSender> IS_MINISTRO_DELLA_POLIZIA = player -> {
     var fractionPlayer = FractionPlayer.get(player);
     return fractionPlayer.isPresent() && fractionPlayer.get().hasTopRank() && fractionPlayer.get().isPoliceman();
   };
-  private static final Predicate<CommandSender> IS_MINISTRO_DELLA_OBORONA = player -> {
+  public static final Predicate<CommandSender> IS_MINISTRO_DELLA_OBORONA = player -> {
     var fractionPlayer = FractionPlayer.get(player);
     return fractionPlayer.isPresent() && fractionPlayer.get().hasTopRank() && fractionPlayer.get().isMilitary();
   };
-  private static final Predicate<CommandSender> IS_POLICEMAN = player -> {
+  public static final Predicate<CommandSender> IS_POLICEMAN = player -> {
     var fractionPlayer = FractionPlayer.get(player);
     return fractionPlayer.isPresent() && fractionPlayer.get().isPoliceman();
   };
-  private static final Predicate<CommandSender> IS_MILITARY = player -> {
+  public static final Predicate<CommandSender> IS_MILITARY = player -> {
     var fractionPlayer = FractionPlayer.get(player);
     return fractionPlayer.isPresent() && fractionPlayer.get().isMilitary();
   };
-  private static final Predicate<CommandSender> IS_BANDIT = player -> {
+  public static final Predicate<CommandSender> IS_BANDIT = player -> {
     var fractionPlayer = FractionPlayer.get(player);
     return fractionPlayer.isPresent() && fractionPlayer.get().isBandit();
   };
   
-  private static final Predicate<CommandSender> HAS_BANDIT_FRACTION = x -> {
+  public static final Predicate<CommandSender> HAS_BANDIT_FRACTION = x -> {
     Optional<FractionPlayer> fractionPlayer = FractionPlayer.get(x);
     return fractionPlayer.isPresent() && fractionPlayer.get().isBandit() && fractionPlayer.get().hasTopRank();
   };
-  private static final Predicate<CommandSender> HAS_INVITE = x -> {
+  public static final Predicate<CommandSender> HAS_INVITE = x -> {
     Optional<FractionPlayer> fractionPlayer = FractionPlayer.get(x);
     return fractionPlayer.isPresent() && fractionPlayer.get().getInvitedTo().size() > 0;
   };
+  private static final Predicate<CommandSender> NOT_BANDIT = x -> IS_BANDIT.negate().test(x);
   public static JavaPlugin plugin;
   public static YmlConfigManager yml;
   
@@ -96,12 +102,12 @@ public final class Fractions extends JavaPlugin {
                 new ArgumentSet(new AdminSetFraction(), new ExactStringArg("editPlayer"),
                                 new PlayerArg(),
                                 new FractionsArg(),
-                                new RanksAtFraction(-1).optional())
+                                new RanksAtFraction(2).optional())
                    .help("Позволяет изменить игроку фракцию или ранг"),
    
                 new ArgumentSet(new BlockCommandExecutor(), new ExactStringArg("blockCmd"),
                                 new FractionsArg(),
-                                new RanksAtFraction(-1),
+                                new RanksAtFraction(1),
                                 new SpacedStringArg("команда"))
                    .help("Позволяет заблокировать команду для всех игроков, кроме тех, кто имеет указанную фракцию и указанный ранг (или ранг выше)"),
    
@@ -112,24 +118,24 @@ public final class Fractions extends JavaPlugin {
           new ArgumentSet(new JoinFraction(), new ExactStringArg("join"), new InvitedToFractionsArg())
              .canExecute(HASNT_FRACTION.and(HAS_INVITE))
              .help("Позволяет вступить во фракцию, в которую вас пригласили"),
-   
+
           new ArgumentSet(new RenameRank(), new ExactStringArg("renameRank"), new RanksAtSenderFraction(), new StringArg("новое название ранга"))
              .canExecute(HAS_BANDIT_FRACTION)
              .help("Позволяет переименовать ранг (только для бандитов)"),
-   
+
           new ArgumentSet(new LeaveFraction(), new ExactStringArg("leave"))
              .canExecute(HAS_FRACTION)
              .confirmWith("подтверждаю", 60)
              .help("Позволяет покинуть фракцию"),
-   
+
           new ArgumentSet(new KickFromFraction(), new ExactStringArg("kick"), new PlayersAtSenderFraction())
              .canExecute(CAN_KICK)
              .help("Позволяет кикнуть игрока из фракции"),
-   
+
           new ArgumentSet(new InviteFraction(), new ExactStringArg("invite"), new PlayerArg())
              .canExecute(CAN_INVITE)
              .help("Позволяет пригласить игрока во фракцию"),
-   
+
           new ArgumentSet(new SetFractionRank(), new ExactStringArg("setRank"), new PlayersAtSenderFraction(), new RanksAtSenderFraction())
              .canExecute(CAN_INVITE)
              .help("Позволяет установить ранг игроку во фракции")
@@ -143,24 +149,24 @@ public final class Fractions extends JavaPlugin {
              new ExactStringArg("create"),
              new StringArg("название").optional()
           ).canExecute(IS_MINISTRO_DELLA_POLIZIA.or(ServerOperator::isOp)),
-        
+
           new ArgumentSet(
              new DeletePrison(),
              new ExactStringArg("delete"),
              new StringArg("название").optional()
           ).canExecute(IS_MINISTRO_DELLA_POLIZIA.or(ServerOperator::isOp)),
-        
+
           new ArgumentSet(
              new PrisonPut(),
              new PrisonsArg().optional()
           ).canExecute(IS_POLICEMAN),
-        
+
           new ArgumentSet(
              new PrisonDemobilize(),
              new ExactStringArg("demobilize"),
              new PrisonersArg()
           ).canExecute(IS_MINISTRO_DELLA_POLIZIA.or(ServerOperator::isOp))
-     
+
        ).register(this);
   
     new Command("setshoker", new SetShocker())

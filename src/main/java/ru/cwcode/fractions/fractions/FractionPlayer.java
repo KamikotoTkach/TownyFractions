@@ -18,7 +18,7 @@ import java.util.*;
 
 public class FractionPlayer implements Audience {
   private final List<String> invitedTo = new ArrayList<>();
-  transient UUID uuid = null;
+  private UUID uuid = null;
   private String fraction = null;
   private String rank = null;
   
@@ -28,6 +28,7 @@ public class FractionPlayer implements Audience {
   public FractionPlayer(FractionInstance fraction, Rank rank, UUID uuid) {
     this.fraction = fraction.name();
     this.rank = rank.name();
+    this.uuid = uuid;
   }
   
   public FractionPlayer(UUID uniqueId) {
@@ -127,7 +128,8 @@ public class FractionPlayer implements Audience {
   
   public UUID getUUID() {
     if (uuid != null) return uuid;
-    return PlayerStorage.getUUID(this);
+    uuid = PlayerStorage.getUUID(this);
+    return uuid;
   }
   
   public boolean isInvited(String fraction_name) {

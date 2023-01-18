@@ -8,15 +8,18 @@ import ru.cwcode.fractions.criminal.CriminalAPI;
 import tkachgeek.commands.command.arguments.executor.Executor;
 import tkachgeek.tkachutils.messages.MessageReturn;
 
-public class PrisonPut extends Executor {
+public class PrisonArrest extends Executor {
   @Override
   public void executeForPlayer() throws MessageReturn {
-    String prison_name = CriminalAPI.federal;
-    if (isPresent(0)) {
-      prison_name = argS(0);
+    String prison_name = CriminalStorage.getInstance().federal;
+    if (isPresent(1)) {
+      prison_name = argS(1);
     }
     
-    Entity player = player().getTargetEntity(5);
+    //Entity player = player().getTargetEntity(5, true);
+    var rtr = player().getWorld().rayTraceEntities(player().getEyeLocation().add(player().getLocation().getDirection()), player().getLocation().getDirection(), 5);
+    var player = rtr.getHitEntity();
+    
     if (player == null || !player.getType().equals(EntityType.PLAYER)
        || !CriminalAPI.shocked.containsKey(player.getUniqueId())) {
       Messages.getInstance().isnt_shocked.throwback();

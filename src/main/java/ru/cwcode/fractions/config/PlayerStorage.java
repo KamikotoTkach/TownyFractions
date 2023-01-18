@@ -32,7 +32,9 @@ public class PlayerStorage extends YmlConfig implements Reloadable {
   
   public static UUID getUUID(FractionPlayer fractionPlayer) {
     for (Map.Entry<UUID, FractionPlayer> uuidFractionPlayerEntry : getInstance().players.entrySet()) {
-      if (uuidFractionPlayerEntry.getValue().equals(fractionPlayer)) return uuidFractionPlayerEntry.getKey();
+      if (uuidFractionPlayerEntry.getValue().equals(fractionPlayer)) {
+        return uuidFractionPlayerEntry.getKey();
+      }
     }
     return null;
   }

@@ -20,6 +20,9 @@ public class CriminalStorage extends YmlConfig implements Reloadable {
   public int shockTime = 5;
   public int prison_time = 180;
   public int prison_fine = 10;
+  public int raidPreparing = 10 * 60;
+  public int raidMaxDuration = 60 * 60;
+  public double kill_steal = 10;
   private HashMap<String, Prison> prisons = new HashMap<>();
   private HashMap<UUID, Prisoner> prisoners = new HashMap<>();
   private HashMap<UUID, Integer> wanted = new HashMap<>();
@@ -156,6 +159,11 @@ public class CriminalStorage extends YmlConfig implements Reloadable {
   
   public void upWantedLevel(Player player) {
     int level = this.getWantedLevel(player);
+    level++;
+    setWantedLevel(player, level);
+  }
+  
+  public void setWantedLevel(Player player, int level) {
     wanted.put(player.getUniqueId(), level);
   }
   

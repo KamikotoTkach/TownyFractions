@@ -37,7 +37,7 @@ public class Board {
       Board.getInstance().update();
     }, 0, 20);
   }
-
+  
   private final Netherboard board = Netherboard.instance();
   private final Map<UUID, Map<BoardLine, Integer>> player_lines = new HashMap<>();
   private final BoardStorage cfg = BoardStorage.getInstance();
@@ -204,13 +204,13 @@ public class Board {
   
   public String getLocation(Player player) {
     String location = empty;
-    
+  
     Town townInst = TownyAPI.getInstance().getTown(player.getLocation());
     if (townInst != null) location = townInst.getName();
   
-    Optional<Territory> territoryAt = TerrAPI.getTerritoryBy(player);
+    Optional<Territory> territoryAt = TerrAPI.getTerritoryAt(player);
     if (territoryAt.isPresent()) location = territoryAt.get().getName();
-    
+  
     return location;
   }
   
@@ -230,7 +230,9 @@ public class Board {
     } catch (NotRegisteredException e) {
       townTax = 0;
     }
-    return (TerrAPI.getTaxesTotal(player) + townTax) + "$";
+    double taxesTotal = TerrAPI.getTaxesTotal(player) + townTax;
+    if (taxesTotal == 0) return empty;
+    return (taxesTotal) + "$";
   }
   
   public String getWanted(Player player) {

@@ -3,16 +3,16 @@ package ru.cwcode.fractions.fractions.commands.argument;
 import org.bukkit.command.CommandSender;
 import ru.cwcode.fractions.fractions.FractionsAPI;
 import ru.cwcode.fractions.fractions.Rank;
-import tkachgeek.commands.command.arguments.ArgumentWithOffset;
+import tkachgeek.commands.command.arguments.BindedArgument;
 import tkachgeek.tkachutils.text.SpacesHider;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class RanksAtFraction extends ArgumentWithOffset {
+public class RanksAtFraction extends BindedArgument {
   public RanksAtFraction(int i) {
-    offset(i);
+    bind(i);
   }
   
   @Override

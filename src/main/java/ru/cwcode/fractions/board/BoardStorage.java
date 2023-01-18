@@ -20,7 +20,7 @@ public class BoardStorage extends YmlConfig implements Reloadable {
   Message fine = new Message("  <white>Штраф:<gold> <value>");
   Message online = new Message("  <white>Онлайн:<gold> <value>");
   Message restart = new Message("  <white>Рестарт через:<gold> <value>");
-  Message siteLink = new Message("  <white>Наш сайт: <link>");
+  Message siteLink = new Message("  <white>Наш сайт: ");
   
   public BoardStorage() {
   }

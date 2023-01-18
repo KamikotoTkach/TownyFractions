@@ -1,25 +1,37 @@
 package ru.cwcode.fractions.criminal;
 
-import org.bukkit.entity.EntityType;
+import com.palmergames.bukkit.towny.event.damage.TownyFriendlyFireTestEvent;
+import com.palmergames.bukkit.towny.event.damage.TownyPlayerDamagePlayerEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import ru.cwcode.fractions.fractions.FractionPlayer;
 
 public class CriminalListener implements Listener {
-  @EventHandler
-  void onDamage(EntityDamageByEntityEvent e) { //todo: протестить шокер из блядского датапка (╯ ° □ °) ╯ (┻━┻)
-    if (e.getEntity().getType().equals(EntityType.PLAYER)) {
-      if (e.getDamager().getType().equals(EntityType.PLAYER)) {
-        if (CriminalStorage.getInstance().isShocker(((Player) e.getDamager()).getInventory().getItemInMainHand())) {
-          e.setCancelled(true);
-          CriminalAPI.shockPlayer((Player) e.getEntity());
-        }
-      }
+  @EventHandler(priority = EventPriority.HIGHEST)
+  void onDamage(TownyPlayerDamagePlayerEvent e) { //todo: протестить шокер из блядского датапка (╯ ° □ °) ╯ (┻━┻)
+    if (CriminalAPI.raid != null && CriminalAPI.raid.isMember(e.getVictimPlayer())) {
+      e.setCancelled(true);
+    }
+    
+    if (CriminalStorage.getInstance().isShocker(e.getAttackingPlayer().getInventory().getItemInMainHand())) {
+      e.setCancelled(true);
+      CriminalAPI.shockPlayer(e.getVictimPlayer());
+    }
+  }
+  
+  @EventHandler(priority = EventPriority.HIGHEST)
+  void onDamage(TownyFriendlyFireTestEvent e) {
+    if (CriminalAPI.raid != null && CriminalAPI.raid.isMember(e.getDefender())) {
+      e.setPVP(true);
+    }
+    
+    if (CriminalStorage.getInstance().isShocker(e.getAttacker().getInventory().getItemInMainHand())) {
+      e.setPVP(true);
     }
   }
   

@@ -78,11 +78,32 @@ public class CriminalAPI {
     if (prisoner == null) {
       Messages.getInstance().isnt_prisoner.throwback();
     }
-    
+  
     CriminalStorage.getInstance().demobilizePlayer(prisoner);
   }
   
   public static void shockPlayer(Player player) {
     shocked.put(player.getUniqueId(), CriminalStorage.getInstance().shockTime);
+  }
+  
+  public static void startRaid(Player player, String territoryName) throws MessageReturn {
+    if (raid != null) {
+      Messages.getInstance().raid_started.throwback();
+    }
+    
+    FractionPlayer fractionPlayer = FractionPlayer.get(player);
+    
+    FractionInstance aggressor_fraction = null;
+    Territory aggressor_territory = TerrAPI.getTerritoryAt(player).orElseGet(null);
+    
+    if (fractionPlayer.hasFraction() && fractionPlayer.isMilitary()) {
+      Validate.canRaid(fractionPlayer);
+      aggressor_fraction = fractionPlayer.getFraction();
+    }
+    
+    Optional<Territory> victim_territory = TerrAPI.getTerritoryBy(territoryName);
+    Validate.isPresent(victim_territory, territoryName);
+    
+    raid = new Raid(victim_territory.get(), aggressor_fraction, aggressor_territory);
   }
 }
