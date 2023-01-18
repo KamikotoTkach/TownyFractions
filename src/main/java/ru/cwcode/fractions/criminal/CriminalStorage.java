@@ -26,6 +26,7 @@ public class CriminalStorage extends YmlConfig implements Reloadable {
   private HashMap<String, Prison> prisons = new HashMap<>();
   private HashMap<UUID, Prisoner> prisoners = new HashMap<>();
   private HashMap<UUID, Integer> wanted = new HashMap<>();
+  public String federal = "Федеральная";
   private ItemStack shocker;
   
   public CriminalStorage() {
@@ -52,10 +53,11 @@ public class CriminalStorage extends YmlConfig implements Reloadable {
     prisons.remove(prisonName);
   }
   
-  public void putPlayer(Player player, String prisonName, int seconds) {
+  public void arrestPlayer(Player player, String prisonName, int seconds) {
     Messages.getInstance().you_has_been_arrested.send(player);
-    prisoners.put(player.getUniqueId(), new Prisoner(player, LocalDateTime.now().getSecond() + seconds));
+    this.setWantedLevel(player, 0);
     player.teleport(this.getPrison(prisonName).getLocation());
+    prisoners.put(player.getUniqueId(), new Prisoner(player, LocalDateTime.now().getSecond() + seconds));
   }
   
   public void demobilizePlayer(UUID player) {
@@ -150,7 +152,7 @@ public class CriminalStorage extends YmlConfig implements Reloadable {
   }
   
   public boolean isWanted(Player player) {
-    return wanted.containsKey(player.getUniqueId());
+    return this.getWantedLevel(player) > 0;
   }
   
   public int getWantedLevel(Player player) {

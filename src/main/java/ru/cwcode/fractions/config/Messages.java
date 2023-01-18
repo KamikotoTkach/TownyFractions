@@ -37,7 +37,7 @@ public class Messages extends YmlConfig implements Reloadable {
   public Message fractionInfoRanksHeader = new Message("Ранги:");
   public Message you_joined_fraction_$name = new Message("<gold>Вы вступили во фракцию <yellow><name>");
   public Message has_prison = new Message("<gold>Тюрьма с таким названием уже существует");
-  public Message hasnt_$prison = new Message("<gold>Тюрьма с названием <prison> не существует");
+  public Message hasnt_$prison = new Message("<gold>Тюрьма с названием <yellow><prison> <gold>не существует");
   public Message you_has_been_arrested = new Message("<gold>Вы были арестованы");
   public Message you_has_been_demobilized = new Message("<gold>Вы были освобождены");
   public Message prison_created_successfully = new Message("<gold>Тюрьма успешно создана");

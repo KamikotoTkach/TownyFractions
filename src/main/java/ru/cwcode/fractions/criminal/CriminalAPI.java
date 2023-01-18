@@ -5,16 +5,22 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import ru.cwcode.fractions.Fractions;
 import ru.cwcode.fractions.config.Messages;
+import ru.cwcode.fractions.fractions.FractionInstance;
+import ru.cwcode.fractions.fractions.FractionPlayer;
 import ru.cwcode.fractions.utils.Validate;
 import tkachgeek.banks.Banks;
+import tkachgeek.config.minilocale.Placeholder;
 import tkachgeek.tkachutils.messages.MessageReturn;
+import tkachgeek.townyterritory.TerrAPI;
+import tkachgeek.townyterritory.territory.Territory;
 
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.UUID;
 
 public class CriminalAPI {
   public static final HashMap<UUID, Integer> shocked = new HashMap<>();
-  public static final String federal = "Федеральная";
+  public static Raid raid = null;
   
   static {
     Bukkit.getScheduler().runTaskTimerAsynchronously(Fractions.plugin, () -> {
@@ -57,7 +63,13 @@ public class CriminalAPI {
     return CriminalStorage.getInstance().isPrisoner(player);
   }
   
-  public static void putPlayer(Player policeman, Player player, String prison_name) throws MessageReturn {
+  public static void stealMoney(Player player, Player killer) {
+    double money = Banks.getEconomy().getBalance(player) * CriminalStorage.getInstance().kill_steal / 100;
+    Banks.getEconomy().depositPlayer(killer, money);
+    Banks.getEconomy().withdrawPlayer(player, money);
+  }
+  
+  public static void arrestPlayer(Player policeman, Player player, String prison_name) throws MessageReturn {
     Validate.isWanted(player);
     Validate.existPrison(prison_name);
     Validate.isNotPrisoner(player);
@@ -66,10 +78,11 @@ public class CriminalAPI {
     int seconds = wanted_level * CriminalStorage.getInstance().prison_time;
     int fine = wanted_level * CriminalStorage.getInstance().prison_fine;
     
-    Banks.getEconomy().withdrawPlayer(player, fine);
     Banks.getEconomy().depositPlayer(policeman, fine);
+    Banks.getEconomy().withdrawPlayer(player, fine);
     
-    CriminalStorage.getInstance().putPlayer(player, prison_name, seconds);
+    CriminalStorage.getInstance().arrestPlayer(player, prison_name, seconds);
+    Messages.getInstance().$player_arrested_successfully.send(policeman, Placeholder.add("player", player.getName()));
   }
   
   public static void demobilizePlayer(String name) throws MessageReturn {
@@ -80,6 +93,7 @@ public class CriminalAPI {
     }
   
     CriminalStorage.getInstance().demobilizePlayer(prisoner);
+    Messages.getInstance().$player_demobilized_successfully.throwback(Placeholder.add("player", name));
   }
   
   public static void shockPlayer(Player player) {

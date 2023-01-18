@@ -23,6 +23,7 @@ import tkachgeek.commands.command.ArgumentSet;
 import tkachgeek.commands.command.Command;
 import tkachgeek.commands.command.arguments.ExactStringArg;
 import tkachgeek.commands.command.arguments.TimeArg;
+import tkachgeek.commands.command.arguments.basic.IntegerArg;
 import tkachgeek.commands.command.arguments.basic.StringArg;
 import tkachgeek.commands.command.arguments.bukkit.PlayerArg;
 import tkachgeek.commands.command.arguments.spaced.SpacedStringArg;
@@ -104,15 +105,18 @@ public final class Fractions extends JavaPlugin {
                                 new FractionsArg(),
                                 new RanksAtFraction(2).optional())
                    .help("Позволяет изменить игроку фракцию или ранг"),
-   
-                new ArgumentSet(new BlockCommandExecutor(), new ExactStringArg("blockCmd"),
+
+                new ArgumentSet(new BlockCommandExecutor(), new ExactStringArg("blockCMD"),
                                 new FractionsArg(),
                                 new RanksAtFraction(1),
                                 new SpacedStringArg("команда"))
                    .help("Позволяет заблокировать команду для всех игроков, кроме тех, кто имеет указанную фракцию и указанный ранг (или ранг выше)"),
-   
+
                 new ArgumentSet(new AdminSetRestartTime(), new ExactStringArg("setRestartTime"),
-                                new TimeArg())
+                                new TimeArg()),
+                new ArgumentSet(new AdminSetWanted(), new ExactStringArg("setWanted"),
+                                new PlayerArg(),
+                                new IntegerArg().setMin(0))
              )
        ).arguments(
           new ArgumentSet(new JoinFraction(), new ExactStringArg("join"), new InvitedToFractionsArg())
@@ -153,11 +157,12 @@ public final class Fractions extends JavaPlugin {
           new ArgumentSet(
              new DeletePrison(),
              new ExactStringArg("delete"),
-             new StringArg("название").optional()
+             new PrisonsArg().optional()
           ).canExecute(IS_MINISTRO_DELLA_POLIZIA.or(ServerOperator::isOp)),
 
           new ArgumentSet(
-             new PrisonPut(),
+             new PrisonArrest(),
+             new ExactStringArg("arrest"),
              new PrisonsArg().optional()
           ).canExecute(IS_POLICEMAN),
 
@@ -171,6 +176,11 @@ public final class Fractions extends JavaPlugin {
   
     new Command("setshoker", new SetShocker())
        .register(this);
+  
+    new Command("raid")
+       .arguments(new ArgumentSet(new RaidCommand(), new BanditTerritoryArg()).canExecute(CAN_RAID.and(NOT_BANDIT)),
+                  new ArgumentSet(new RaidCommand(), new NotBanditTerritoryArg()).canExecute(CAN_RAID.and(IS_BANDIT))
+       ).register(this);
   
     Bukkit.getPluginManager().registerEvents(new CommandListener(), this);
     Bukkit.getPluginManager().registerEvents(new BoardListener(), this);

@@ -41,7 +41,13 @@ public class CriminalListener implements Listener {
     if (killer != null) {
       FractionPlayer fractionPlayer = FractionPlayer.get(killer);
       if (!fractionPlayer.isPoliceman() && !fractionPlayer.isMilitary()) {
+        CriminalAPI.stealMoney(e.getEntity(), killer);
+    
         CriminalStorage.getInstance().upWantedLevel(killer);
+      }
+  
+      if (CriminalAPI.raid != null && CriminalAPI.raid.getState().equals(RaidState.STARTED)) {
+        CriminalAPI.raid.progressRaid(e.getEntity());
       }
     }
   }

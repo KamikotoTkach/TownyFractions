@@ -15,6 +15,7 @@ public class SetShocker extends Executor {
     }
     
     CriminalStorage.getInstance().setShocker(item);
+    Messages.getInstance().shoker_set_successfully.send(sender());
   }
   
   @Override

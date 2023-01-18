@@ -1,10 +1,10 @@
 package ru.cwcode.fractions.criminal.commands.command;
 
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import ru.cwcode.fractions.config.Messages;
 import ru.cwcode.fractions.criminal.CriminalAPI;
+import ru.cwcode.fractions.criminal.CriminalStorage;
 import tkachgeek.commands.command.arguments.executor.Executor;
 import tkachgeek.tkachutils.messages.MessageReturn;
 
@@ -24,8 +24,8 @@ public class PrisonArrest extends Executor {
        || !CriminalAPI.shocked.containsKey(player.getUniqueId())) {
       Messages.getInstance().isnt_shocked.throwback();
     }
-    
-    CriminalAPI.putPlayer(player(), (Player) player, prison_name);
+  
+    CriminalAPI.arrestPlayer(player(), (Player) player, prison_name);
   }
   
   @Override

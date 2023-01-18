@@ -66,13 +66,13 @@ public class Validate {
   }
   
   public static void isNotPrisoner(Player player) throws MessageReturn {
-    if (!CriminalAPI.isPrisoner(player)) {
+    if (CriminalAPI.isPrisoner(player)) {
       Messages.getInstance().is_prisoner.throwback();
     }
   }
   
-  public static void youNotPrisoner(Player player) throws MessageReturn {
-    if (CriminalAPI.isPrisoner(player)) {
+  public static void isPrisoner(Player player) throws MessageReturn {
+    if (!CriminalAPI.isPrisoner(player)) {
       Messages.getInstance().you_is_prisoner.throwback();
     }
   }
@@ -91,19 +91,25 @@ public class Validate {
   
   public static void isWanted(Player player) throws MessageReturn {
     if (!CriminalStorage.getInstance().isWanted(player)) {
-      Messages.getInstance().is_wanted_$player.throwback(Placeholder.add("player", player.getName()));
+      Messages.getInstance().isnt_wanted_$player.throwback(Placeholder.add("player", player.getName()));
     }
   }
   
   public static void isntWanted(Player player) throws MessageReturn {
     if (CriminalStorage.getInstance().isWanted(player)) {
-      Messages.getInstance().isnt_wanted_$player.throwback(Placeholder.add("player", player.getName()));
+      Messages.getInstance().is_wanted_$player.throwback(Placeholder.add("player", player.getName()));
     }
   }
   
   public static void isPrisoner(String name) throws MessageReturn {
     if (!CriminalAPI.isPrisoner(name)) {
       Messages.getInstance().isnt_prisoner.throwback();
+    }
+  }
+  
+  public static void canRaid(FractionPlayer fractionPlayer) throws MessageReturn {
+    if (!fractionPlayer.canRaid()) {
+      Messages.getInstance().you_not_general.throwback();
     }
   }
 }

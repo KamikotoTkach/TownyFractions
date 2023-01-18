@@ -17,8 +17,8 @@ public class RanksAtFraction extends BindedArgument {
   
   @Override
   public boolean valid(String rank, String fraction) {
-    var fractionInst = FractionsAPI.getFraction(fraction);
-    return fractionInst.isPresent() && fractionInst.get().hasRank(SpacesHider.restore(rank));
+    var fractionInstance = FractionsAPI.getFraction(fraction);
+    return fractionInstance.isPresent() && fractionInstance.get().hasRank(SpacesHider.restore(rank));
   }
   
   @Override

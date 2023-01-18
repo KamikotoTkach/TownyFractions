@@ -76,6 +76,9 @@ public class FractionPlayer implements Audience {
     return getRank().permissions().canChangeMembers();
   }
   
+  public boolean canRaid() {
+    return getRank().permissions().canRaid();
+  }
   
   public @Nullable FractionInstance getFraction() {
     return fraction == null ? null : FractionsAPI.getFraction(fraction).get();

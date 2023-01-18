@@ -152,46 +152,47 @@ public class Board {
     switch (line) {
       case data_time -> {
         value = dateTime();
-        text.append(BoardStorage.getInstance().time.getLegacySection(Placeholder.add("value", value)));
+        text.append(cfg.time.getLegacySection(Placeholder.add("value", value)));
       }
       case wanted -> {
         value = getWanted(player);
-        text.append(BoardStorage.getInstance().wanted.getLegacySection(Placeholder.add("value", value)));
+        text.append(cfg.wanted.getLegacySection(Placeholder.add("value", value)));
       }
       case player -> {
         value = getPlayerName(player);
-        text.append(BoardStorage.getInstance().player.getLegacySection(Placeholder.add("value", value)));
+        text.append(cfg.player.getLegacySection(Placeholder.add("value", value)));
       }
       case rank -> {
         value = getRank(player);
-        text.append(BoardStorage.getInstance().rank.getLegacySection(Placeholder.add("value", value)));
+        text.append(cfg.rank.getLegacySection(Placeholder.add("value", value)));
       }
       case money -> {
         value = getMoney(player);
-        text.append(BoardStorage.getInstance().balance.getLegacySection(Placeholder.add("value", value)));
+        text.append(cfg.balance.getLegacySection(Placeholder.add("value", value)));
       }
       case location -> {
         value = getLocation(player);
-        text.append(BoardStorage.getInstance().location.getLegacySection(Placeholder.add("value", value)));
+        text.append(cfg.location.getLegacySection(Placeholder.add("value", value)));
       }
       case tax -> {
         value = getTaxes(player);
-        text.append(BoardStorage.getInstance().taxes.getLegacySection(Placeholder.add("value", value)));
+        text.append(cfg.taxes.getLegacySection(Placeholder.add("value", value)));
       }
       case fine -> {
         value = getFine(player);
-        text.append(BoardStorage.getInstance().fine.getLegacySection(Placeholder.add("value", value)));
+        text.append(cfg.fine.getLegacySection(Placeholder.add("value", value)));
       }
       case server_online -> {
         value = getOnline();
-        text.append(BoardStorage.getInstance().online.getLegacySection(Placeholder.add("value", value)));
+        text.append(cfg.online.getLegacySection(Placeholder.add("value", value)));
       }
       case restart_time -> {
         value = getRestartTime();
-        text.append(BoardStorage.getInstance().restart.getLegacySection(Placeholder.add("value", value)));
+        text.append(cfg.restart.getLegacySection(Placeholder.add("value", value)));
       }
       case server_link -> {
-        text.append(BoardStorage.getInstance().siteLink.getLegacySection());
+        value = cfg.siteLink.getLegacySection();
+        text.append(value);
       }
     }
   
