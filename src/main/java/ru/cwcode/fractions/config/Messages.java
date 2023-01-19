@@ -100,6 +100,7 @@ public class Messages extends YmlConfig implements Reloadable {
   public Message $player_demobilized_successfully = new Message("<yellow><player> <gold>успешно освобождён из тюрьмы");
   
   public Messages() {
+  
   }
   
   public static Messages getInstance() {

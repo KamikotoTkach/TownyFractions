@@ -22,7 +22,6 @@ import ru.cwcode.logo.Logo;
 import tkachgeek.commands.command.ArgumentSet;
 import tkachgeek.commands.command.Command;
 import tkachgeek.commands.command.arguments.ExactStringArg;
-import tkachgeek.commands.command.arguments.TimeArg;
 import tkachgeek.commands.command.arguments.basic.IntegerArg;
 import tkachgeek.commands.command.arguments.basic.StringArg;
 import tkachgeek.commands.command.arguments.bukkit.PlayerArg;
@@ -178,8 +177,7 @@ public final class Fractions extends JavaPlugin {
        .register(this);
   
     new Command("raid")
-       .arguments(new ArgumentSet(new RaidCommand(), new BanditTerritoryArg()).canExecute(CAN_RAID.and(NOT_BANDIT)),
-                  new ArgumentSet(new RaidCommand(), new NotBanditTerritoryArg()).canExecute(CAN_RAID.and(IS_BANDIT))
+       .arguments(new ArgumentSet(new RaidCommand(), new AllTerritories()).canExecute(CAN_RAID)
        ).register(this);
   
     Bukkit.getPluginManager().registerEvents(new CommandListener(), this);

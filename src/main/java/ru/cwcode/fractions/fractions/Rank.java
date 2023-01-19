@@ -66,7 +66,8 @@ public class Rank {
     this.priority = priority;
   }
   
-  public void permissions(Permissions permissions) {
+  public Rank permissions(Permissions permissions) {
     this.permissions = permissions;
+    return this;
   }
 }

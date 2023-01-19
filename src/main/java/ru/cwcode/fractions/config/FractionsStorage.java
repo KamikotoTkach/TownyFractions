@@ -19,12 +19,12 @@ public class FractionsStorage extends YmlConfig implements Reloadable {
     add(new Rank("Прапорщик").salary(25));
     add(new Rank("Лейтенант").salary(30));
     add(new Rank("Капитан").salary(35));
-    add(new Rank("Майор").salary(40));
-    add(new Rank("Полковник").salary(45));
-    add(new Rank("Генерал майор").salary(50));
-    add(new Rank("Генерал лейтенант").salary(55));
-    add(new Rank("Генерал полковник").salary(60));
-    add(new Rank("Министр юстици").salary(65));
+    add(new Rank("Майор").salary(40).permissions(new Permissions().setCanChangeMembers(true).setCanRaid(true)));
+    add(new Rank("Полковник").salary(45).permissions(new Permissions().setCanChangeMembers(true).setCanRaid(true)));
+    add(new Rank("Генерал майор").salary(50).permissions(new Permissions().setCanChangeMembers(true).setCanRaid(true)));
+    add(new Rank("Генерал лейтенант").salary(55).permissions(new Permissions().setCanChangeMembers(true).setCanRaid(true)));
+    add(new Rank("Генерал полковник").salary(60).permissions(new Permissions().setCanChangeMembers(true).setCanRaid(true)));
+    add(new Rank("Министр юстици").salary(65).permissions(new Permissions().setCanChangeMembers(true).setCanRaid(true)));
   }};
   
   transient private final List<Rank> defaultArmyRanks = new ArrayList<>() {{
@@ -35,18 +35,18 @@ public class FractionsStorage extends YmlConfig implements Reloadable {
     add(new Rank("Прапорщик").salary(28));
     add(new Rank("Лейтенант").salary(30));
     add(new Rank("Капитан").salary(32));
-    add(new Rank("Майор").salary(34));
-    add(new Rank("Полковник").salary(36));
-    add(new Rank("Генерал армии").salary(38));
-    add(new Rank("Министр обороны").salary(40));
+    add(new Rank("Майор").salary(34).permissions(new Permissions().setCanChangeMembers(true).setCanRaid(true)));
+    add(new Rank("Полковник").salary(36).permissions(new Permissions().setCanChangeMembers(true).setCanRaid(true)));
+    add(new Rank("Генерал армии").salary(38).permissions(new Permissions().setCanChangeMembers(true).setCanRaid(true)));
+    add(new Rank("Министр обороны").salary(40).permissions(new Permissions().setCanChangeMembers(true).setCanRaid(true)));
   }};
   
   transient private final List<Rank> defaultBanditRanks = new ArrayList<>() {{
     add(new Rank("Козёл"));
     add(new Rank("Мужик"));
     add(new Rank("Блатной"));
-    add(new Rank("Зам.главы"));
-    add(new Rank("Глава"));
+    add(new Rank("Зам.главы").permissions(new Permissions().setCanChangeMembers(true).setCanRaid(true)));
+    add(new Rank("Глава").permissions(new Permissions().setCanChangeMembers(true).setCanRaid(true)));
   }};
   
   List<FractionInstance> fractions = new ArrayList<>() {{

@@ -15,11 +15,15 @@ public class PrisonArrest extends Executor {
     if (isPresent(1)) {
       prison_name = argS(1);
     }
-    
+  
     //Entity player = player().getTargetEntity(5, true);
     var rtr = player().getWorld().rayTraceEntities(player().getEyeLocation().add(player().getLocation().getDirection()), player().getLocation().getDirection(), 5);
-    var player = rtr.getHitEntity();
-    
+    Entity player = null;
+  
+    if (rtr != null) {
+      player = rtr.getHitEntity();
+    }
+  
     if (player == null || !player.getType().equals(EntityType.PLAYER)
        || !CriminalAPI.shocked.containsKey(player.getUniqueId())) {
       Messages.getInstance().isnt_shocked.throwback();

@@ -42,7 +42,7 @@ public class CriminalListener implements Listener {
       FractionPlayer fractionPlayer = FractionPlayer.get(killer);
       if (!fractionPlayer.isPoliceman() && !fractionPlayer.isMilitary()) {
         CriminalAPI.stealMoney(e.getEntity(), killer);
-    
+  
         CriminalStorage.getInstance().upWantedLevel(killer);
       }
   
@@ -54,11 +54,8 @@ public class CriminalListener implements Listener {
   
   @EventHandler
   void onTeleport(PlayerTeleportEvent e) {
-    if (CriminalAPI.shocked.containsKey(e.getPlayer().getUniqueId())) {
-      e.setCancelled(true);
-    }
-    
-    if (CriminalAPI.isPrisoner(e.getPlayer())) {
+    if (CriminalAPI.isPrisoner(e.getPlayer()) || CriminalAPI.shocked.containsKey(e.getPlayer().getUniqueId())) {
+      if (TerrAPI.isPrisonTerritory(e.getTo())) return;
       e.setCancelled(true);
     }
   }

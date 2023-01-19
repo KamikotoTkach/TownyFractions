@@ -20,7 +20,7 @@ public class Prisoner {
     this.time = time;
   }
   
-  public boolean demobilized() {
+  public boolean timeExpired() {
     return LocalDateTime.now().getSecond() > this.time;
   }
   
