@@ -98,6 +98,9 @@ public class Messages extends YmlConfig implements Reloadable {
   public Message shoker_set_successfully = new Message("<gold>Теперь подобные предметы являются шокером");
   public Message $player_arrested_successfully = new Message("<yellow><player> <gold>успешно арестован");
   public Message $player_demobilized_successfully = new Message("<yellow><player> <gold>успешно освобождён из тюрьмы");
+  public Message stats_header_$rank$salary = new Message("<rank>: <salary>$");
+  public Message stats_statEntry$name$value = new Message(" - <name>: <value>");
+  public Message peaceful_wipe_message = new Message("Это мирный вайп.");
   
   public Messages() {
   

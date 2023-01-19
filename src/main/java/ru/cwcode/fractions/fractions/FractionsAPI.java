@@ -35,6 +35,7 @@ public class FractionsAPI {
     FractionPlayer fraction_general = PlayerStorage.get(general);
   
     Validate.canChangeMembers(fraction_general);
+    Validate.isNotPeacefulWipe();
   
     fraction_player.addInvite(fraction_general.getFraction().name());
     Messages.getInstance().player_invited_successfully.send(general);

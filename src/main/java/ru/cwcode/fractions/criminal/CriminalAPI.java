@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import ru.cwcode.fractions.Fractions;
 import ru.cwcode.fractions.config.Messages;
+import ru.cwcode.fractions.config.PlayerStorage;
 import ru.cwcode.fractions.fractions.FractionInstance;
 import ru.cwcode.fractions.fractions.FractionPlayer;
 import ru.cwcode.fractions.utils.Validate;
@@ -79,16 +80,18 @@ public class CriminalAPI {
     Validate.isWanted(player);
     Validate.existPrison(prison_name);
     Validate.isNotPrisoner(player);
-    
+  
     int wanted_level = CriminalStorage.getInstance().getWantedLevel(player);
     int seconds = wanted_level * CriminalStorage.getInstance().prison_time;
     int fine = wanted_level * CriminalStorage.getInstance().prison_fine;
-    
+  
     Banks.getEconomy().depositPlayer(policeman, fine);
     Banks.getEconomy().withdrawPlayer(player, fine);
-    
+  
     CriminalStorage.getInstance().arrestPlayer(player, prison_name, seconds);
     Messages.getInstance().$player_arrested_successfully.send(policeman, Placeholder.add("player", player.getName()));
+  
+    PlayerStorage.get(policeman).incrementStatistics("Арестовано");
   }
   
   public static void demobilizePlayer(String name) throws MessageReturn {

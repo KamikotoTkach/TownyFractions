@@ -1,6 +1,7 @@
 package ru.cwcode.fractions.utils;
 
 import org.bukkit.entity.Player;
+import ru.cwcode.fractions.config.Config;
 import ru.cwcode.fractions.config.Messages;
 import ru.cwcode.fractions.criminal.CriminalAPI;
 import ru.cwcode.fractions.criminal.CriminalStorage;
@@ -110,6 +111,12 @@ public class Validate {
   public static void canRaid(FractionPlayer fractionPlayer) throws MessageReturn {
     if (!fractionPlayer.canRaid()) {
       Messages.getInstance().you_not_general.throwback();
+    }
+  }
+  
+  public static void isNotPeacefulWipe() throws MessageReturn {
+    if (Config.getInstance().isPeacefulWipe()) {
+      Messages.getInstance().peaceful_wipe_message.throwback();
     }
   }
 }

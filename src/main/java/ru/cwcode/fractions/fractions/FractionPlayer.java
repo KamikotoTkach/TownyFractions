@@ -21,6 +21,7 @@ public class FractionPlayer implements Audience {
   private UUID uuid = null;
   private String fraction = null;
   private String rank = null;
+  private final FractionStatistics statistics = new FractionStatistics();
   
   public FractionPlayer() {
   }
@@ -204,11 +205,19 @@ public class FractionPlayer implements Audience {
     return hasFraction() && getFraction().isMilitaryFraction();
   }
   
+  public void incrementStatistics(String key) {
+    statistics.increment(getFraction().name() + ":" + key);
+  }
+  
   @Override
   public void sendMessage(@NonNull Component message) {
     OfflinePlayer player = getPlayer();
     if (player.isOnline()) {
       player.getPlayer().sendMessage(message);
     }
+  }
+  
+  public FractionStatistics getStats() {
+    return statistics;
   }
 }

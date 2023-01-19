@@ -8,6 +8,7 @@ import ru.cwcode.fractions.Fractions;
 import ru.cwcode.fractions.config.Messages;
 import ru.cwcode.fractions.config.PlayerStorage;
 import ru.cwcode.fractions.fractions.FractionInstance;
+import ru.cwcode.fractions.fractions.FractionPlayer;
 import ru.cwcode.fractions.fractions.FractionsAPI;
 import tkachgeek.config.minilocale.Message;
 import tkachgeek.config.minilocale.Placeholder;
@@ -15,10 +16,9 @@ import tkachgeek.config.minilocale.Placeholders;
 import tkachgeek.tkachutils.messages.MessageReturn;
 import tkachgeek.tkachutils.scheduler.Scheduler;
 import tkachgeek.townyterritory.territory.Territory;
+import tkachgeek.townyterritory.territory.TerritoryResident;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class Raid {
   private final FractionInstance aggressor_fraction;
@@ -88,20 +88,34 @@ public class Raid {
   private void addMembers() {
     if (direction.aggressorIsFraction) {
       aggressor_members.addAll(PlayerStorage.getAllPlayersWithFraction(aggressor_fraction).stream().map(OfflinePlayer::getUniqueId).toList());
+  
+      for (FractionPlayer fractionPlayer : PlayerStorage.getAllFractionPlayersWithFraction(aggressor_fraction)) {
+        fractionPlayer.incrementStatistics("Рейдов");
+      }
     } else {
-      aggressor_members.addAll(aggressor_territory.getResidents().stream().map(offlinePlayer -> offlinePlayer.getPlayer().getUniqueId()).toList());
+      List<UUID> list = new ArrayList<>();
+      for (TerritoryResident offlinePlayer : aggressor_territory.getResidents()) {
+        list.add(offlinePlayer.getPlayer().getUniqueId());
+      }
+      aggressor_members.addAll(list);
     }
-    victim_members.addAll(victim.getResidents().stream().map(offlinePlayer -> offlinePlayer.getPlayer().getUniqueId()).toList());
-    
+  
+    List<UUID> list = new ArrayList<>();
+  
+    for (TerritoryResident territoryResident : victim.getResidents()) {
+      list.add(territoryResident.getPlayer().getUniqueId());
+    }
+  
     if (direction == Direction.BANDIT_TO_PEACEFUL) {
-      victim_members.addAll(PlayerStorage.getAllPlayersWithFraction(FractionsAPI.getFraction(FractionsAPI.FractionName.POLICE))
-                                         .stream()
-                                         .map(OfflinePlayer::getUniqueId)
-                                         .toList());
-      victim_members.addAll(PlayerStorage.getAllPlayersWithFraction(FractionsAPI.getFraction(FractionsAPI.FractionName.MILITARY))
-                                         .stream()
-                                         .map(OfflinePlayer::getUniqueId)
-                                         .toList());
+      for (OfflinePlayer player : PlayerStorage.getAllPlayersWithFraction(FractionsAPI.getFraction(FractionsAPI.FractionName.POLICE))) {
+        list.add(player.getUniqueId());
+      }
+    
+      for (OfflinePlayer offlinePlayer : PlayerStorage.getAllPlayersWithFraction(FractionsAPI.getFraction(FractionsAPI.FractionName.MILITARY))) {
+        list.add(offlinePlayer.getUniqueId());
+      }
+    
+      victim_members.addAll(list);
     }
   }
   

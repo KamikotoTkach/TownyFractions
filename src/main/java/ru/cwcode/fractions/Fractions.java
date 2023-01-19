@@ -153,19 +153,19 @@ public final class Fractions extends JavaPlugin {
              new ExactStringArg("create"),
              new StringArg("название").optional()
           ).canExecute(IS_MINISTRO_DELLA_POLIZIA.or(ServerOperator::isOp)),
-
+   
           new ArgumentSet(
              new DeletePrison(),
              new ExactStringArg("delete"),
              new PrisonsArg().optional()
           ).canExecute(IS_MINISTRO_DELLA_POLIZIA.or(ServerOperator::isOp)),
-
+   
           new ArgumentSet(
              new PrisonArrest(),
              new ExactStringArg("arrest"),
              new PrisonsArg().optional()
-          ).canExecute(IS_POLICEMAN),
-
+          ).canExecute(IS_POLICEMAN.or(IS_MILITARY)),
+   
           new ArgumentSet(
              new PrisonDemobilize(),
              new ExactStringArg("demobilize"),
@@ -180,6 +180,8 @@ public final class Fractions extends JavaPlugin {
     new Command("raid")
        .arguments(new ArgumentSet(new RaidCommand(), new AllTerritories()).canExecute(CAN_RAID)
        ).register(this);
+  
+    new Command("stats", new StatsCmd()).register(this);
   
     Bukkit.getPluginManager().registerEvents(new CommandListener(), this);
     Bukkit.getPluginManager().registerEvents(new BoardListener(), this);

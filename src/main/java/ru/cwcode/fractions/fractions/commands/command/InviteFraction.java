@@ -15,7 +15,6 @@ public class InviteFraction extends Executor {
     Optional<FractionPlayer> fractionPlayer = PlayerStorage.get(argS(1));
     
     Validate.isPresent(fractionPlayer, "Игрок");
-    
     FractionsAPI.invitePlayer(player(), fractionPlayer.get());
   }
 }

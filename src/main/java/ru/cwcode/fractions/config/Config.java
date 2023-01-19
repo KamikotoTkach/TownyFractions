@@ -6,6 +6,8 @@ import tkachgeek.config.yaml.YmlConfig;
 public class Config extends YmlConfig {
   static Config instance;
   
+  public boolean peacefulWipe = false;
+  
   public Config() {
   }
   
@@ -16,5 +18,9 @@ public class Config extends YmlConfig {
   
   public static void load() {
     instance = Fractions.yml.load("Config", Config.class);
+  }
+  
+  public boolean isPeacefulWipe() {
+    return peacefulWipe;
   }
 }
