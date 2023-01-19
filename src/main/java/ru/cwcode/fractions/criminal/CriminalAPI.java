@@ -27,11 +27,17 @@ public class CriminalAPI {
       for (UUID uuid : shocked.keySet()) {
         int seconds = shocked.get(uuid);
         seconds--;
-        
+    
         if (seconds <= 0) {
           shocked.remove(uuid);
         } else {
           shocked.put(uuid, seconds);
+        }
+      }
+  
+      for (Prisoner prisoner : CriminalStorage.getInstance().getPrisoners()) {
+        if (prisoner.timeExpired()) {
+          CriminalStorage.getInstance().demobilizePlayer(prisoner);
         }
       }
     }, 0, 20L);

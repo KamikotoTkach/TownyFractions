@@ -25,6 +25,7 @@ import tkachgeek.commands.command.arguments.ExactStringArg;
 import tkachgeek.commands.command.arguments.basic.IntegerArg;
 import tkachgeek.commands.command.arguments.basic.StringArg;
 import tkachgeek.commands.command.arguments.bukkit.PlayerArg;
+import tkachgeek.commands.command.arguments.datetime.TimeArg;
 import tkachgeek.commands.command.arguments.spaced.SpacedStringArg;
 import tkachgeek.config.yaml.FlushCommand;
 import tkachgeek.config.yaml.ReloadCommand;

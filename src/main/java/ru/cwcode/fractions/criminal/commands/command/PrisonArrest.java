@@ -1,5 +1,6 @@
 package ru.cwcode.fractions.criminal.commands.command;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import ru.cwcode.fractions.config.Messages;

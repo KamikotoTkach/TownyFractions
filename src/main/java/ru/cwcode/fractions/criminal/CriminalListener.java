@@ -2,35 +2,42 @@ package ru.cwcode.fractions.criminal;
 
 import com.palmergames.bukkit.towny.event.damage.TownyFriendlyFireTestEvent;
 import com.palmergames.bukkit.towny.event.damage.TownyPlayerDamagePlayerEvent;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import ru.cwcode.fractions.fractions.FractionPlayer;
+import tkachgeek.townyterritory.TerrAPI;
 
 public class CriminalListener implements Listener {
+  @EventHandler
+  void onInteract(PlayerInteractAtEntityEvent e) {
+    if (e.getHand().equals(EquipmentSlot.HAND)) {
+      if (e.getRightClicked().getType().equals(EntityType.PLAYER)) {
+        if (CriminalStorage.getInstance().isShocker(e.getPlayer().getInventory().getItemInMainHand())) {
+          e.setCancelled(true);
+          CriminalAPI.shockPlayer((Player) e.getRightClicked());
+        }
+      }
+    }
+  }
+  
   @EventHandler(priority = EventPriority.HIGHEST)
-  void onDamage(TownyPlayerDamagePlayerEvent e) { //todo: протестить шокер из блядского датапка (╯ ° □ °) ╯ (┻━┻)
+  void onDamage(TownyPlayerDamagePlayerEvent e) {
     if (CriminalAPI.raid != null && CriminalAPI.raid.isMember(e.getVictimPlayer())) {
       e.setCancelled(true);
-    }
-    
-    if (CriminalStorage.getInstance().isShocker(e.getAttackingPlayer().getInventory().getItemInMainHand())) {
-      e.setCancelled(true);
-      CriminalAPI.shockPlayer(e.getVictimPlayer());
     }
   }
   
   @EventHandler(priority = EventPriority.HIGHEST)
   void onDamage(TownyFriendlyFireTestEvent e) {
     if (CriminalAPI.raid != null && CriminalAPI.raid.isMember(e.getDefender())) {
-      e.setPVP(true);
-    }
-    
-    if (CriminalStorage.getInstance().isShocker(e.getAttacker().getInventory().getItemInMainHand())) {
       e.setPVP(true);
     }
   }

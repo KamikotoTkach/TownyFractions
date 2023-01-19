@@ -112,13 +112,17 @@ public class CriminalStorage extends YmlConfig implements Reloadable {
     return new ArrayList<>(prisons.keySet());
   }
   
-  public List<String> getPrisonersNames() {
-    List<String> prisoners = new ArrayList<>();
+  public List<Prisoner> getPrisoners() {
+    List<Prisoner> prisoners = new ArrayList<>();
     for (UUID uuid : this.prisoners.keySet()) {
-      prisoners.add(this.prisoners.get(uuid).getName());
+      prisoners.add(this.getPrisoner(uuid));
     }
     
     return prisoners;
+  }
+  
+  public List<String> getPrisonersNames() {
+    return this.getPrisoners().stream().map(Prisoner::getName).toList();
   }
   
   public void setShocker(ItemStack item) {
