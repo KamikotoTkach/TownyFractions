@@ -131,6 +131,17 @@ public class PlayerStorage extends YmlConfig implements Reloadable {
     return ret;
   }
   
+  public static List<Player> getOnlinePlayersWithFraction(FractionInstance fraction) {
+    List<Player> ret = new ArrayList<>();
+    for (var playerAndFraction : getInstance().players.entrySet()) {
+      if (playerAndFraction.getValue().hasFraction() && playerAndFraction.getValue().getFraction().equals(fraction)) {
+        Player player = Bukkit.getPlayer(playerAndFraction.getKey());
+        if (player != null) ret.add(player);
+      }
+    }
+    return ret;
+  }
+  
   @Override
   public void reload() {
     load();

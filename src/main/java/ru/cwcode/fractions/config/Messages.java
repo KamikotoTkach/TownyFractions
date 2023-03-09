@@ -49,10 +49,10 @@ public class Messages extends YmlConfig implements Reloadable {
   public Message is_wanted_$player = new Message("<yellow><player> <gold>объявлен в розыск");
   public Message isnt_wanted_$player = new Message("<yellow><player> <gold>не объявлен в розыск");
   public Message you_is_prisoner = new Message("<gold>Вы не можете этого сделать, так как являетесь заключённым");
-  /* public Message you_are_not_military = new Message("<gold>Вы не военный");
-   public Message you_are_not_policeman = new Message("<gold>Вы не полицейский");
-   public Message you_are_not_bandit = new Message("<gold>Вы не бандит");
-   public Message you_are_not_military_or_policeman = new Message("<gold>Вы не полицейский и не военный");*/
+  public Message you_are_not_military = new Message("<gold>Вы не военный");
+  public Message you_are_not_policeman = new Message("<gold>Вы не полицейский");
+  public Message you_are_not_bandit = new Message("<gold>Вы не бандит");
+  public Message you_are_not_military_or_policeman = new Message("<gold>Вы не полицейский и не военный");
   public Message BANDIT_TO_PEACEFUL_preparingMessage_toAggressor = new Message("<gold>Вы нападаете на <victim>, подготовьтесь как следует");
   public Message BANDIT_TO_PEACEFUL_winMessage_toAggressor = new Message("<gold>Вы выиграли нападение");
   public Message BANDIT_TO_PEACEFUL_loseMessage_toAggressor = new Message("<gold>Ваше нападение не удалось");

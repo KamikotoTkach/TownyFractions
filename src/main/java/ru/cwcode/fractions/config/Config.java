@@ -3,10 +3,13 @@ package ru.cwcode.fractions.config;
 import ru.cwcode.fractions.Fractions;
 import tkachgeek.config.yaml.YmlConfig;
 
+import java.time.Duration;
+
 public class Config extends YmlConfig {
   static Config instance;
   
-  public boolean peacefulWipe = false;
+  boolean peacefulWipe = false;
+  long timeToSalary = Duration.ofDays(7).toMillis();
   
   public Config() {
   }
@@ -22,5 +25,9 @@ public class Config extends YmlConfig {
   
   public boolean isPeacefulWipe() {
     return peacefulWipe;
+  }
+  
+  public long getTimeToSalary() {
+    return timeToSalary;
   }
 }

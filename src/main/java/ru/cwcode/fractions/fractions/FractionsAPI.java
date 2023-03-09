@@ -34,8 +34,10 @@ public class FractionsAPI {
   public static void invitePlayer(Player general, FractionPlayer fraction_player) throws MessageReturn {
     FractionPlayer fraction_general = PlayerStorage.get(general);
   
+    Validate.hasFraction(fraction_general);
     Validate.canChangeMembers(fraction_general);
-    Validate.isNotPeacefulWipe();
+  
+    if (!fraction_general.getFraction().isPoliceFraction()) Validate.isNotPeacefulWipe();
   
     fraction_player.addInvite(fraction_general.getFraction().name());
     Messages.getInstance().player_invited_successfully.send(general);
@@ -82,7 +84,7 @@ public class FractionsAPI {
   }
   
   public static Audience getMilitaryAudience() {
-    return Audience.audience(PlayerStorage.getOnlineFractionPlayersWithFraction(getFraction(FractionName.MILITARY)));
+    return Audience.audience(PlayerStorage.getOnlinePlayersWithFraction(getFraction(FractionName.MILITARY)));
   }
   
   public static Audience getMilitaryAndPoliceAudience() {

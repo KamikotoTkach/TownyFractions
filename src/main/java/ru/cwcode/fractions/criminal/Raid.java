@@ -40,7 +40,7 @@ public class Raid {
     this.aggressor_fraction = aggressor_fraction;
     this.aggressor_territory = aggressor_territory;
     this.victim = victim;
-    
+  
     this.setupDirection(victim, aggressor_fraction, aggressor_territory);
     
     if (direction == null)
@@ -48,25 +48,35 @@ public class Raid {
     
     placeholders = Placeholder.add("aggressor", direction.aggressorIsFraction() ? aggressor_fraction.name() : aggressor_territory.getName())
                               .add("victim", victim.getName());
-    
+  
     direction.preparingSendMessages(this.aggressorAudience(), this.victim, placeholders);
-    
-    Scheduler.create(this).async().perform(Raid::start).register(Fractions.plugin, preparing * 20);
-    
+  
+    Scheduler.create(this)
+             .async()
+             .perform(Raid::start)
+             .until(x -> state == RaidState.PREPARING)
+             .register(Fractions.plugin, preparing * 20);
+  
     this.timeoutScheduler = Scheduler.create(this)
                                      .perform(raid -> raid.win(Winner.TIE))
+                                     .until(raid -> raid != null && raid.state == RaidState.STARTED)
                                      .register(Fractions.plugin, (preparing + duration) * 20);
   }
   
   private void setupDirection(Territory victim, @Nullable FractionInstance aggressor_fraction, @Nullable Territory aggressor_territory) {
-    if (aggressor_territory == null && aggressor_fraction != null && aggressor_fraction.isMilitaryFraction() && victim.isBandit())
+    if (aggressor_fraction != null && aggressor_fraction.isMilitaryFraction() && victim.isBandit())
       direction = Direction.MILITARY_TO_BANDIT;
     else if (aggressor_fraction == null && aggressor_territory != null && aggressor_territory.isBandit() && !victim.isBandit())
       direction = Direction.BANDIT_TO_PEACEFUL;
-    else if (aggressor_fraction == null && aggressor_territory != null && !aggressor_territory.isBandit() && victim.isBandit())
+  
+    else if (aggressor_territory != null && !aggressor_territory.isBandit() && victim.isBandit())
       direction = Direction.PEACEFUL_TO_BANDIT;
-    else if (aggressor_fraction == null && aggressor_territory != null && aggressor_territory.isBandit() && victim.isBandit())
-      direction = Direction.BANDIT_TO_BANDIT;
+  
+    else if (aggressor_territory != null && aggressor_territory.isBandit() && victim.isBandit()) {
+      if (victim != aggressor_territory) {
+        direction = Direction.BANDIT_TO_BANDIT;
+      }
+    }
   }
   
   private void start() {
@@ -74,11 +84,11 @@ public class Raid {
     
     this.aggressorKills = 0;
     this.victimKills = 0;
-    
+  
     direction.startSendMessages(this.aggressorAudience(), this.victim, placeholders);
-    
+  
     this.addMembers();
-    
+  
     Scheduler.create(this).async()
              .until(Raid::isStarted)
              .perform(Raid::everySecondTick)
@@ -88,7 +98,7 @@ public class Raid {
   private void addMembers() {
     if (direction.aggressorIsFraction) {
       aggressor_members.addAll(PlayerStorage.getAllPlayersWithFraction(aggressor_fraction).stream().map(OfflinePlayer::getUniqueId).toList());
-  
+      
       for (FractionPlayer fractionPlayer : PlayerStorage.getAllFractionPlayersWithFraction(aggressor_fraction)) {
         fractionPlayer.incrementStatistics("Рейдов");
       }
@@ -99,24 +109,23 @@ public class Raid {
       }
       aggressor_members.addAll(list);
     }
-  
+    
     List<UUID> list = new ArrayList<>();
-  
+    
     for (TerritoryResident territoryResident : victim.getResidents()) {
       list.add(territoryResident.getPlayer().getUniqueId());
     }
-  
+    
     if (direction == Direction.BANDIT_TO_PEACEFUL) {
       for (OfflinePlayer player : PlayerStorage.getAllPlayersWithFraction(FractionsAPI.getFraction(FractionsAPI.FractionName.POLICE))) {
         list.add(player.getUniqueId());
       }
-    
+      
       for (OfflinePlayer offlinePlayer : PlayerStorage.getAllPlayersWithFraction(FractionsAPI.getFraction(FractionsAPI.FractionName.MILITARY))) {
         list.add(offlinePlayer.getUniqueId());
       }
-    
-      victim_members.addAll(list);
     }
+    victim_members.addAll(list);
   }
   
   public boolean isStarted() {
@@ -154,10 +163,12 @@ public class Raid {
   }
   
   private void win(Winner winner) {
+    state = RaidState.ENDED;
+  
     switch (winner) {
       case AGGRESSOR -> {
         direction.aggressorWinSendMessages(this.aggressorAudience(), this.victim, placeholders);
-        
+      
         switch (direction) {
           case BANDIT_TO_PEACEFUL -> {
             victim.setUnderControl(aggressor_territory);

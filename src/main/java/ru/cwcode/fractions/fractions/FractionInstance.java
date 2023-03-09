@@ -109,8 +109,9 @@ public class FractionInstance {
     fractionPlayer.setRank(getLowestRank());
   }
   
-  private Rank getLowestRank() {
-    return ranks.get(0);
+  public FractionInstance setOnlineToAttack(int onlineToAttack) {
+    this.onlineToAttack = onlineToAttack;
+    return this;
   }
   
   public int getTotalPlayers() {
@@ -123,5 +124,18 @@ public class FractionInstance {
   
   public String getFormattedName() {
     return getPrefix() + name();
+  }
+  
+  public int getOnlineToDefence() {
+    return this.onlineToDefence;
+  }
+  
+  public FractionInstance setOnlineToDefence(int onlineToDefence) {
+    this.onlineToDefence = onlineToDefence;
+    return this;
+  }
+  
+  public boolean requireInvite() {
+    return requireInvite;
   }
 }

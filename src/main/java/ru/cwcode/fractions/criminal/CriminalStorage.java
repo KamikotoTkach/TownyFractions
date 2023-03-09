@@ -8,8 +8,8 @@ import ru.cwcode.fractions.Fractions;
 import ru.cwcode.fractions.config.Messages;
 import tkachgeek.config.base.Reloadable;
 import tkachgeek.config.yaml.YmlConfig;
+import tkachgeek.townyterritory.feature.journal.JournalAPI;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,8 +20,8 @@ public class CriminalStorage extends YmlConfig implements Reloadable {
   public int shockTime = 5;
   public int prison_time = 180;
   public int prison_fine = 10;
-  public int raidPreparing = 10 * 60;
-  public int raidMaxDuration = 60 * 60;
+  public int raidPreparing = 10;
+  public int raidMaxDuration = 60;
   public double kill_steal = 10;
   public String federal = "Федеральная";
   private HashMap<String, Prison> prisons = new HashMap<>();
@@ -54,15 +54,19 @@ public class CriminalStorage extends YmlConfig implements Reloadable {
   }
   
   public void arrestPlayer(Player player, String prisonName, int seconds) {
-    Messages.getInstance().you_has_been_arrested.send(player);
     this.setWantedLevel(player, 0);
     player.teleport(this.getPrison(prisonName).getLocation());
-    this.prisoners.put(player.getUniqueId(), new Prisoner(player, LocalDateTime.now().getSecond() + seconds));
+    this.prisoners.put(player.getUniqueId(), new Prisoner(player, System.currentTimeMillis() / 1000L + seconds));
+  
+    Messages.getInstance().you_has_been_arrested.send(player);
+    JournalAPI.addEntry(player, "Перемещён в тюрьму " + prisonName);
   }
   
   public void demobilizePlayer(UUID player) {
-    Messages.getInstance().you_has_been_demobilized.send(player);
     prisoners.remove(player);
+  
+    Messages.getInstance().you_has_been_demobilized.send(player);
+    JournalAPI.addEntry(player, "Выпущен из тюрьмы");
   }
   
   public void demobilizePlayer(Player player) {
@@ -171,6 +175,7 @@ public class CriminalStorage extends YmlConfig implements Reloadable {
   
   public void setWantedLevel(Player player, int level) {
     wanted.put(player.getUniqueId(), level);
+    JournalAPI.addEntry(player, "Уровень розыска " + level);
   }
   
   @Override

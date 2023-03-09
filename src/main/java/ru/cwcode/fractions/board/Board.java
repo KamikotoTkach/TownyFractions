@@ -12,6 +12,7 @@ import ru.cwcode.fractions.criminal.CriminalStorage;
 import ru.cwcode.fractions.fractions.FractionPlayer;
 import tkachgeek.banks.Banks;
 import tkachgeek.config.minilocale.Placeholder;
+import tkachgeek.tkachutils.numbers.NumbersUtils;
 import tkachgeek.townyterritory.TerrAPI;
 import tkachgeek.townyterritory.territory.Territory;
 
@@ -216,7 +217,7 @@ public class Board {
   }
   
   public String getMoney(Player player) {
-    return Banks.getEconomy().getBalance(player) + "$";
+    return NumbersUtils.round(Banks.getEconomy().getBalance(player), 2) + "$";
   }
   
   public String dateTime() {
@@ -247,7 +248,7 @@ public class Board {
         } else {
           value.append("§8");
         }
-        value.append("✰").append(" ");
+        value.append("✰ ");
       }
     }
     
@@ -277,7 +278,7 @@ public class Board {
     
     FractionPlayer fractionPlayer = FractionPlayer.get(player);
     if (fractionPlayer.hasFraction()) {
-      value.append(fractionPlayer.getRank().name()).append(" ");
+      value.append(fractionPlayer.getFormattedRank()).append(" ");
     }
     
     return value.toString();

@@ -8,9 +8,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.Nullable;
+import ru.cwcode.fractions.config.Config;
 import ru.cwcode.fractions.config.FractionsStorage;
 import ru.cwcode.fractions.config.Messages;
 import ru.cwcode.fractions.config.PlayerStorage;
+import tkachgeek.banks.Banks;
 import tkachgeek.config.minilocale.Placeholder;
 import tkachgeek.tkachutils.messages.MessageReturn;
 
@@ -18,10 +20,11 @@ import java.util.*;
 
 public class FractionPlayer implements Audience {
   private final List<String> invitedTo = new ArrayList<>();
+  private final FractionStatistics statistics = new FractionStatistics();
   private UUID uuid = null;
   private String fraction = null;
   private String rank = null;
-  private final FractionStatistics statistics = new FractionStatistics();
+  private long lastSalary = 0;
   
   public FractionPlayer() {
   }
@@ -57,12 +60,22 @@ public class FractionPlayer implements Audience {
   }
   
   public Rank getRank() {
-    return getFraction().getRank(rank).get();
+    Optional<Rank> optionalRank = getFraction().getRank(rank);
+    if (optionalRank.isEmpty()) {
+      setupDefaultRank();
+      return getRank();
+    }
+    return optionalRank.get();
   }
   
   public void setRank(Rank rank) {
     this.rank = rank.name();
     Messages.getInstance().your_rank_was_updated_to_$rank.send(getUUID(), Placeholder.add("rank", rank.name()));
+  }
+  
+  private void setupDefaultRank() {
+    if (getFraction() == null) return;
+    rank = getFraction().getLowestRank().name();
   }
   
   public boolean hasFraction() {
@@ -144,30 +157,31 @@ public class FractionPlayer implements Audience {
     if (isInvited(fraction_name)) {
       Messages.getInstance().player_has_fraction_invite.throwback();
     }
-  
+    
     invitedTo.add(fraction_name);
     Messages.getInstance().you_invited_$fraction.send(getUUID(), Placeholder.add("fraction", getFraction().name()));
   }
   
-  public void removeInvite(String fraction_name) throws MessageReturn {
-    if (!isInvited(fraction_name)) {
+  public void checkInvite(String fraction_name) throws MessageReturn {
+    if (FractionsAPI.getFraction(fraction_name).get().requireInvite() && !isInvited(fraction_name)) {
       Messages.getInstance().you_not_invited_to_$fraction.throwback();
     }
     
     invitedTo.remove(fraction_name);
   }
   
-  public void acceptInvite(String fractionName) throws MessageReturn {
+  public void join(String fractionName) throws MessageReturn {
     if (hasFraction()) {
       Messages.getInstance().you_has_fraction.throwback();
     }
     
-    removeInvite(fractionName);
+    checkInvite(fractionName);
+    
     Optional<FractionInstance> fraction = FractionsStorage.getInstance().getFraction(fractionName);
     if (!fraction.isPresent()) {
       Messages.getInstance().fraction_$name_not_exist.throwback(Placeholder.add("name", fractionName));
     }
-  
+    
     this.fraction = fraction.get().name();
   }
   
@@ -219,5 +233,26 @@ public class FractionPlayer implements Audience {
   
   public FractionStatistics getStats() {
     return statistics;
+  }
+  
+  public void tryToGetSalary() throws MessageReturn {
+    if (Config.getInstance().getTimeToSalary() + lastSalary > System.currentTimeMillis()) {
+      lastSalary = System.currentTimeMillis();
+      double salary = getSalary();
+      if (salary == 0) {
+        Messages.getInstance().you_hasnt_salary.throwback();
+      }
+      Banks.getEconomy().depositPlayer(getPlayer(), salary);
+    } else {
+      Messages.getInstance().you_hasnt_salary_now.throwback();
+    }
+  }
+  
+  private double getSalary() {
+    return hasFraction() ? getRank().salary() : 0;
+  }
+  
+  public boolean canWithdrawSalary() {
+    return getSalary() != 0 && Config.getInstance().getTimeToSalary() + lastSalary > System.currentTimeMillis();
   }
 }

@@ -28,6 +28,6 @@ public class AllTerritories extends Argument {
   
   @Override
   public String argumentName() {
-    return "бандитская территорий";
+    return "вражеская территория";
   }
 }

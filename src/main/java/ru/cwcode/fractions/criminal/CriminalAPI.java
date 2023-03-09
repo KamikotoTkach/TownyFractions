@@ -13,6 +13,7 @@ import tkachgeek.banks.Banks;
 import tkachgeek.config.minilocale.Placeholder;
 import tkachgeek.tkachutils.messages.MessageReturn;
 import tkachgeek.townyterritory.TerrAPI;
+import tkachgeek.townyterritory.feature.journal.JournalAPI;
 import tkachgeek.townyterritory.territory.Territory;
 
 import java.util.HashMap;
@@ -28,7 +29,7 @@ public class CriminalAPI {
       for (UUID uuid : shocked.keySet()) {
         int seconds = shocked.get(uuid);
         seconds--;
-    
+  
         if (seconds <= 0) {
           shocked.remove(uuid);
         } else {
@@ -72,8 +73,11 @@ public class CriminalAPI {
   
   public static void stealMoney(Player player, Player killer) {
     double money = Banks.getEconomy().getBalance(player) * CriminalStorage.getInstance().kill_steal / 100;
+  
     Banks.getEconomy().depositPlayer(killer, money);
     Banks.getEconomy().withdrawPlayer(player, money);
+  
+    JournalAPI.addEntry(player, "Украл у " + player.getName() + " " + money + "$");
   }
   
   public static void arrestPlayer(Player policeman, Player player, String prison_name) throws MessageReturn {
@@ -89,8 +93,9 @@ public class CriminalAPI {
     Banks.getEconomy().withdrawPlayer(player, fine);
   
     CriminalStorage.getInstance().arrestPlayer(player, prison_name, seconds);
-    Messages.getInstance().$player_arrested_successfully.send(policeman, Placeholder.add("player", player.getName()));
   
+    Messages.getInstance().$player_arrested_successfully.send(policeman, Placeholder.add("player", player.getName()));
+    JournalAPI.addEntry(player, "Перенёс " + player + " в тюрьму " + prison_name);
     PlayerStorage.get(policeman).incrementStatistics("Арестовано");
   }
   
@@ -113,20 +118,25 @@ public class CriminalAPI {
     if (raid != null) {
       Messages.getInstance().raid_started.throwback();
     }
-    
+  
     FractionPlayer fractionPlayer = FractionPlayer.get(player);
-    
     FractionInstance aggressor_fraction = null;
-    Territory aggressor_territory = TerrAPI.getTerritoryAt(player).orElseGet(null);
-    
+  
+    Optional<Territory> territoryAt = TerrAPI.getTerritoryAt(player);
+    Territory aggressor_territory = territoryAt.orElse(null);
+  
+    if (aggressor_territory != null && !aggressor_territory.isOwner(player)) {
+      aggressor_territory = null;
+    }
+  
     if (fractionPlayer.hasFraction() && fractionPlayer.isMilitary()) {
       Validate.canRaid(fractionPlayer);
       aggressor_fraction = fractionPlayer.getFraction();
     }
-    
+  
     Optional<Territory> victim_territory = TerrAPI.getTerritoryBy(territoryName);
     Validate.isPresent(victim_territory, territoryName);
-    
+  
     raid = new Raid(victim_territory.get(), aggressor_fraction, aggressor_territory);
   }
 }

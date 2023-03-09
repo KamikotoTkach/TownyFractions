@@ -2,7 +2,6 @@ package ru.cwcode.fractions.criminal;
 
 import org.bukkit.entity.Player;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class Prisoner {
@@ -21,7 +20,7 @@ public class Prisoner {
   }
   
   public boolean timeExpired() {
-    return LocalDateTime.now().getSecond() > this.time;
+    return System.currentTimeMillis() / 1000L > this.time;
   }
   
   public UUID getUUID() {
